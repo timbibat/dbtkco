@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lookbook</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col px-0 mx-0">
+                <nav class="navbar navbar-expand-xxl position-fixed top-0 w-100 z-3 py-3">
+                    <a href="{{ url_for('home') }}" class="h2 mx-2 px-2">
+                        <strong
+                            class="d-flex justify-content-start mobile-dbtk-spacing computer-dbtk-spacing">DBTK</strong>
+                    </a>
+                    <!-- All nav content collapses here on mobile -->
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+                        <!-- Wrapper for the sliding menu -->
+                        <div class="sliding-menu-wrapper">
+                            <!-- Nav links -->
+                            <div
+                                class="d-flex flex-column flex-lg-row justify-content-center align-items-center w-100 sliding-menu mx-5">
+                                <!-- Close button for mobile menu -->
+                                <button class="close-menu-btn d-lg-none p-1 me-3" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-label="Close menu"
+                                    style="z-index: 1050;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                                <div class="mx-5 no-style"><a href="{{ url_for('home') }}">Home</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('brand') }}">Brand</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('shop') }}">Shop</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('blog') }}">Blog</a></div>
+                                <div class="mx-5 no-style"><a href="#">Lookbook</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('aboutus') }}">About Us</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('contact') }}">Contact</a></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart and Search -->
+                    <div class="d-flex align-items-center ms-auto px-2">
+                        <!-- User Profile Dropdown - now with hover and color change on scroll -->
+                        <div class="dropdown profile-dropdown">
+                            <button class="btn btn-white position-relative" type="button" id="profileDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="background: transparent;">
+                                <i class="bi bi-person-circle profile-icon-white" id="profileIcon"
+                                    style="font-size: 1.7rem;"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                {% if session.get('user_logged_in') or session.get('admin_logged_in') %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('admin_logout') }}" style="color: #000;">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="dropdown-item-text" style="color: #000;">
+                                        <i class="bi bi-person"></i>
+                                        {{ session['firstname'] }} {{ session['lastname'] }}
+                                    </span>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('admin_login') }}" style="color: #000;">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('signup') }}" style="color: #000;">
+                                        <i class="bi bi-person-plus me-2"></i> Sign Up
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-white position-relative" type="button" id="cartDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                </svg>
+                                <span id="cartCount"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end p-3 cart-dropdown" style="min-width: 250px;"
+                                aria-labelledby="cartDropdown">
+                                <h6 class="dropdown-header">Your Shopping Cart</h6>
+                                <div id="cartItems" class="mb-2" style="max-height: 200px; overflow-y: auto;">
+                                    <p class="text-muted mb-0">Your cart is empty</p>
+                                </div>
+                                <div class="d-flex justify-content-between border-top pt-2">
+                                    <h6>Total:</h6>
+                                    <h6 id="cartTotal">₱0.00</h6>
+                                </div>
+                                <div class="d-grid gap-2 mt-2">
+                                    <a href="{{ url_for('cart_page') }}" class="btn btn-primary view-cart-btn">View
+                                        Cart</a>
+                                    <button id="checkoutBtn" class="btn btn-primary" disabled>Checkout</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col px-0 mx-0"><!-- Search Toggle Button -->
+                            <button class="btn btn-white" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#searchBar" aria-expanded="false" aria-controls="searchBar">
+                                <svg class="svg-icon icon-search" width="20px" height="20px" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g fill="currentColor" fill-rule="nonzero">
+                                        <path
+                                            d="M19.129,18.164 L14.611,13.644 C15.763,12.271 16.463,10.501 16.463,8.567 C16.463,4.206 12.928,0.671 8.567,0.671 C4.206,0.671 0.671,4.206 0.671,8.567 C0.671,12.928 4.206,16.463 8.567,16.463 C10.501,16.463 12.272,15.765 13.645,14.61 L18.165,19.129 C18.431,19.397 18.864,19.397 19.13,19.129 C19.396,18.863 19.396,18.431 19.129,18.164 Z M8.53051964,15.25 C4.85786,15.25 1.88,12.27 1.88,8.6 C1.88,4.93 4.85786,1.95 8.53052,1.95 C12.2032,1.95 15.18,4.93 15.18,8.6 C15.18,12.27 12.2032,15.25 8.53052,15.25 Z" />
+                                    </g>
+                                </svg>
+                            </button>
+                            <!-- Search Popup (below navbar) -->
+                            <div id="searchBar"
+                                class="collapse position-fixed top-0 start-0 w-100 bg-white shadow-lg z-1050">
+                                <div class="container py-1 mt-3">
+                                    <div class="input-group mb-1">
+                                        <input type="text" class="form-control form-control-lg" id="searchInput"
+                                            placeholder="Search products...">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#searchBar">×</button>
+                                    </div>
+                                    <!-- Search Results Grid -->
+                                    <div id="searchProductGrid" class="row justify-content-center"
+                                        style="max-height: 400px; overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Toggler button (hamburger icon for mobile) -->
+                        <!-- Update your existing navbar-toggler button with these classes -->
+                        <button class="navbar-toggler bg-white rounded" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add padding-top to prevent overlap with fixed navbar -->
+    <div class="container pt-3">
+        <!-- Centered "Lookbook" on top -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-auto my-1">
+                <strong class="fs-3">Lookbook</strong>
+            </div>
+        </div>
+
+        <!-- Two columns: left text, right image -->
+        <div class="row">
+            <!-- Left column: text -->
+            <div class="col-md-6">
+                <strong class="fs-2">DBTK QUICKSTRIKE 2025</strong>
+                <p>
+                    The DBTK Quick Strike Collection – Crafted for those who appreciate effortless style with a bold
+                    edge. A perfect blend of simple sophistication and on-trend vibes, designed to elevate your everyday
+                    look. Whether you’re keeping it low-key or making a statement, this collection speaks volumes with
+                    every wear.
+                </p>
+            </div>
+
+            <!-- Right column: image -->
+            <div class="col-md-6">
+                <img src="https://dbtkco.com/cdn/shop/articles/DB100929_1296x.jpg?v=1746703074"
+                    alt="DBTK Quickstrike Collection" class="img-fluid" />
+            </div>
+        </div>
+
+        <!-- Row 1: Cards 1-4 -->
+        <div class="container">
+            <div class="row text-center mt-5 gx-0" id="row1">
+                <!-- Card 1 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/DB100127_360x.jpg?v=1746427197"
+                        data-title="DBTK x DAILY" data-date="May 29, 2025"
+                        data-desc="A unique fusion of DBTK flair and DAILY's clean aesthetic. Limited release.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/DB100127_360x.jpg?v=1746427197"
+                            alt="DBTK x DAILY" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK x DAILY</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/379339453_706867768143789_3121383370098301665_n_1296x.jpg?v=1697791667"
+                        data-title="DBTK x BURGER KING" data-date="May 22, 2025"
+                        data-desc="Streetwear meets fast food culture in this flavorful DBTK x BURGER KING drop.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/379339453_706867768143789_3121383370098301665_n_1296x.jpg?v=1697791667"
+                            alt="DBTK x BURGER KING" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK x BURGER KING</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/305660233_5549774271743405_1766307237868811048_n_1296x.jpg?v=1664854898"
+                        data-title="DBTK x H&M" data-date="May 12, 2025"
+                        data-desc="Modern basics reimagined—DBTK and H&M combine everyday style with creative flair.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/305660233_5549774271743405_1766307237868811048_n_1296x.jpg?v=1664854898"
+                            alt="DBTK x H&M" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK x H&M</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/spark_-_flatlay_1296x.jpg?v=1674529169"
+                        data-title="DBTK SPARK SHOES" data-date="May 4, 2025"
+                        data-desc="SPARK your step—this DBTK footwear celebrates expression and bold motion.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/spark_-_flatlay_1296x.jpg?v=1674529169"
+                            alt="DBTK SPARK SHOES" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK SPARK SHOES</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Row 2: Cards 5-8 -->
+        <div class="container">
+            <div class="row text-center mt-5 gx-0" id="row2">
+                <!-- Card 5 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/DBTK_Rewind_3_1296x.jpg?v=1745406673"
+                        data-title="DBTK Rewind" data-date="April 24, 2025"
+                        data-desc="A nostalgic return to DBTK's early visual identity. Classic and clean.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/DBTK_Rewind_3_1296x.jpg?v=1745406673"
+                            alt="DBTK Rewind" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK Rewind</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/DB100075_ebeb76d7-02d6-4c24-9c92-a469b06ffc17_1296x.jpg?v=1745407004"
+                        data-title="DBTK Evermore" data-date="April 17, 2025"
+                        data-desc="The Evermore capsule honors timelessness with subtle detailing and soft tones.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/DB100075_ebeb76d7-02d6-4c24-9c92-a469b06ffc17_1296x.jpg?v=1745407004"
+                            alt="DBTK Evermore" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK Evermore</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 7 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/DBT06108_d4cb9e6b-065b-41a0-bf3a-359b15dc546f_1296x.jpg?v=1744789303"
+                        data-title="DBTK Horizon" data-date="April 10, 2025"
+                        data-desc="Chasing new horizons—this visionary release speaks to dreamers and go-getters.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/DBT06108_d4cb9e6b-065b-41a0-bf3a-359b15dc546f_1296x.jpg?v=1744789303"
+                            alt="DBTK Horizon" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK Horizon</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 8 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/469143454_999686352195261_5718487654891709207_n_9712309f-b2ef-40dc-a112-2d49b129cc55_1296x.jpg?v=1745407924"
+                        data-title="DBTK x PMX x AGLXY" data-date="April 1, 2025"
+                        data-desc="Galactic energy unlocked—DBTK, PMX, and AGLXY unite for an interstellar aesthetic.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/469143454_999686352195261_5718487654891709207_n_9712309f-b2ef-40dc-a112-2d49b129cc55_1296x.jpg?v=1745407924"
+                            alt="DBTK x PMX x AGLXY" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK x PMX x AGLXY</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Row 3: Cards 9-12 -->
+        <div class="container">
+            <div class="row text-center mt-5 gx-0" id="row3">
+                <!-- Card 9 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/467347197_989191423244754_2287346073260842432_n.jpg?v=1734934261"
+                        data-title="DBTK x HOT WHEELS" data-date="March 29, 2025"
+                        data-desc="Fuel your fun—DBTK x HOT WHEELS ignites playful streetwear with turbocharged prints.">
+                        <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/467347197_989191423244754_2287346073260842432_n.jpg?v=1734934261"
+                            alt="DBTK x HOT WHEELS" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK x HOT WHEELS</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 10 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/463606718_964199965743900_7658695224073568194_n.jpg?v=1734933506"
+                        data-title="DBTK COMPILATION '23-'24" data-date="March 20, 2025"
+                        data-desc="A celebration of growth—DBTK's highlights from 2023-2024 in one bold collection.">
+                        <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/463606718_964199965743900_7658695224073568194_n.jpg?v=1734933506"
+                            alt="DBTK COMPILATION '23-'24" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK COMPILATION '23-'24</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 11 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/459178803_935598695270694_2107249756153632082_n.jpg?v=1734932812"
+                        data-title="DBTK Forever Pursuit" data-date="March 15, 2025"
+                        data-desc="Rooted in consistency and commitment, Forever Pursuit blends grit with grace.">
+                        <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/459178803_935598695270694_2107249756153632082_n.jpg?v=1734932812"
+                            alt="DBTK Forever Pursuit" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK Forever Pursuit</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 12 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/455274665_916631810500716_5897771690243077231_n.jpg?v=1734932391"
+                        data-title="DBTK x JINRO" data-date="March 5, 2025"
+                        data-desc="Built for adventure—DBTK x JINRO fuses eco-mindfulness with rugged street gear.">
+                        <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/455274665_916631810500716_5897771690243077231_n.jpg?v=1734932391"
+                            alt="DBTK x JINRO" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK x JINRO</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards 13-20 -->
+        <div id="moreCards" class="row text-center gx-0 d-none">
+
+            <!-- Row 4: Cards 13-16 -->
+            <div class="container">
+                <div class="row text-center mt-5 gx-0" id="row4">
+                    <!-- Card 13 -->
+                    <div class="col-12 col-md-3 p-4">
+                        <div class="card border-0 clickable-card" style="cursor: pointer;"
+                            data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/454197469_910573997773164_7388449985517147719_n.jpg?v=1734931382"
+                            data-title="DBTK SPORTS" data-date="February 26, 2025"
+                            data-desc="Move with power—DBTK SPORTS is where athletic energy meets street precision.">
+                            <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/454197469_910573997773164_7388449985517147719_n.jpg?v=1734931382"
+                                alt="DBTK SPORTS" class="card-img-top uniform-img" />
+                            <div class="card-body p-2"><strong>DBTK SPORTS</strong></div>
+                        </div>
+                        <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                            <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                            <h5 class="expanded-title"></h5>
+                            <p class="text-muted expanded-date"></p>
+                            <p class="expanded-desc"></p>
+                        </div>
+                    </div>
+                    <!-- Card 14 -->
+                    <div class="col-12 col-md-3 p-4">
+                        <div class="card border-0 clickable-card" style="cursor: pointer;"
+                            data-img="https://dbtkco.com/cdn/shop/articles/DBT06225_1296x.jpg?v=1722309418"
+                            data-title="DBTK CORE" data-date="February 22, 2025"
+                            data-desc="CORE focuses on the essentials—DBTK's signature comfort and minimalist style.">
+                            <img src="https://dbtkco.com/cdn/shop/articles/DBT06225_1296x.jpg?v=1722309418"
+                                alt="DBTK CORE" class="card-img-top uniform-img" />
+                            <div class="card-body p-2"><strong>DBTK CORE</strong></div>
+                        </div>
+                        <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                            <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                            <h5 class="expanded-title"></h5>
+                            <p class="text-muted expanded-date"></p>
+                            <p class="expanded-desc"></p>
+                        </div>
+                    </div>
+                    <!-- Card 15 -->
+                    <div class="col-12 col-md-3 p-4">
+                        <div class="card border-0 clickable-card" style="cursor: pointer;"
+                            data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DBT04643_600x600.jpg?v=1722308515"
+                            data-title="DBTK CAMO COLLECTION" data-date="February 15, 2025"
+                            data-desc="Camo with a twist—DBTK drops a bold collection full of statement graphics.">
+                            <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DBT04643_600x600.jpg?v=1722308515"
+                                alt="DBTK CAMO COLLECTION" class="card-img-top uniform-img" />
+                            <div class="card-body p-2"><strong>DBTK CAMO COLLECTION</strong></div>
+                        </div>
+                        <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                            <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                            <h5 class="expanded-title"></h5>
+                            <p class="text-muted expanded-date"></p>
+                            <p class="expanded-desc"></p>
+                        </div>
+                    </div>
+                    <!-- Card 16 -->
+                    <div class="col-12 col-md-3 p-4">
+                        <div class="card border-0 clickable-card" style="cursor: pointer;"
+                            data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DBT04165-Enhanced-NR_e3b06a05-4ad3-443a-8ec1-93e9fb68b3c9_600x600.jpg?v=1722308092"
+                            data-title="DBTK Evolution" data-date="February 11, 2025"
+                            data-desc="A look into the future with bold cuts and tech-infused fabrics.">
+                            <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DBT04165-Enhanced-NR_e3b06a05-4ad3-443a-8ec1-93e9fb68b3c9_600x600.jpg?v=1722308092"
+                                alt="DBTK Evolution" class="card-img-top uniform-img" />
+                            <div class="card-body p-2"><strong>DBTK Evolution</strong></div>
+                        </div>
+                        <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                            <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                            <h5 class="expanded-title"></h5>
+                            <p class="text-muted expanded-date"></p>
+                            <p class="expanded-desc"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                    <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                    <h5 class="expanded-title"></h5>
+                    <p class="text-muted expanded-date"></p>
+                    <p class="expanded-desc"></p>
+                </div>
+            </div>
+
+            <!-- Row 5: Cards 17-20 -->
+            <div class="container">
+                <div class="row text-center mt-5 gx-0" id="row5">
+                    <!-- Card 17 -->
+                    <div class="col-12 col-md-3 p-4">
+                        <div class="card border-0 clickable-card" style="cursor: pointer;"
+                            data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DBT09799-Enhanced-NR_600x600.jpg?v=1722317988"
+                            data-title="DBTK X LOUNGE" data-date="January 31, 2025"
+                            data-desc="Relaxed fits and soft textures for maximum chill vibes.">
+                            <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DBT09799-Enhanced-NR_600x600.jpg?v=1722317988"
+                                alt="DBTK X LOUNGE" class="card-img-top uniform-img" />
+                            <div class="card-body p-2"><strong>DBTK X LOUNGE</strong></div>
+                        </div>
+                        <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                            <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                            <h5 class="expanded-title"></h5>
+                            <p class="text-muted expanded-date"></p>
+                            <p class="expanded-desc"></p>
+                        </div>
+                    </div>
+                    <!-- Card 18 -->
+                    <div class="col-12 col-md-3 p-4">
+                        <div class="card border-0 clickable-card" style="cursor: pointer;"
+                            data-img="https://dbtkco.com/cdn/shop/articles/DA_1296x.jpg?v=1711963614"
+                            data-title="DBTK DAY TO DAY COLLECTION" data-date="January 22, 2025"
+                            data-desc="Basic fits made for everyday hustle—this collection keeps it practical and fresh.">
+                            <img src="https://dbtkco.com/cdn/shop/articles/DA_1296x.jpg?v=1711963614"
+                                alt="DBTK DAY TO DAY COLLECTION" class="card-img-top uniform-img" />
+                            <div class="card-body p-2"><strong>DBTK DAY TO DAY COLLECTION</strong></div>
+                        </div>
+                        <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                            <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                            <h5 class="expanded-title"></h5>
+                            <p class="text-muted expanded-date"></p>
+                            <p class="expanded-desc"></p>
+                        </div>
+                    </div>
+                    <!-- Card 19 -->
+                    <div class="col-12 col-md-3 p-4">
+                        <div class="card border-0 clickable-card" style="cursor: pointer;"
+                            data-img="https://dbtkco.com/cdn/shop/articles/QR_59415.jpg?v=1717067130"
+                            data-title="DBTK STELLAR COLLECTION" data-date="January 10, 2025"
+                            data-desc="A seasonal collection with earthy tones and layered textures.">
+                            <img src="https://dbtkco.com/cdn/shop/articles/QR_59415.jpg?v=1717067130"
+                                alt="DBTK STELLAR COLLECTION" class="card-img-top uniform-img" />
+                            <div class="card-body p-2"><strong>DBTK STELLAR COLLECTION</strong></div>
+                        </div>
+                        <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                            <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                            <h5 class="expanded-title"></h5>
+                            <p class="text-muted expanded-date"></p>
+                            <p class="expanded-desc"></p>
+                        </div>
+                    </div>
+                    <!-- Card 20 -->
+                    <div class="col-12 col-md-3 p-4">
+                        <div class="card border-0 clickable-card" style="cursor: pointer;"
+                            data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DBT08196_e94151bf-fde5-4257-bf2a-d6a0e0fd6283.jpg?v=1717064671"
+                            data-title="DBTK MINI" data-date="January 3, 2025"
+                            data-desc="A small but mighty tribute—DBTK MINI captures the essence of the brand's roots.">
+                            <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DBT08196_e94151bf-fde5-4257-bf2a-d6a0e0fd6283.jpg?v=1717064671"
+                                alt="DBTK MINI" class="card-img-top uniform-img" />
+                            <div class="card-body p-2"><strong>DBTK MINI</strong></div>
+                        </div>
+                        <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                            <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                            <h5 class="expanded-title"></h5>
+                            <p class="text-muted expanded-date"></p>
+                            <p class="expanded-desc"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="row">
+            <div class="col text-center my-4">
+                <button id="loadMoreBtn" class="btn btn-dark px-4 py-2">LOAD MORE</button>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <footer class="py-3 my-4">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li class="nav-item"><a href="{{ url_for('home') }}" class="nav-link px-2 text-muted">Home</a></li>
+                <li class="nav-item"><a href="{{ url_for('brand') }}" class="nav-link px-2 text-muted">Brand</a></li>
+                <li class="nav-item"><a href="{{ url_for('shop') }}" class="nav-link px-2 text-muted">Shop</a></li>
+                <li class="nav-item"><a href="{{ url_for('blog') }}" class="nav-link px-2 text-muted">Blog</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Lookbook</a>
+                </li>
+                <li class="nav-item"><a href="{{ url_for('aboutus') }}" class="nav-link px-2 text-muted">About Us</a>
+                </li>
+                <li class="nav-item"><a href="{{ url_for('contact') }}" class="nav-link px-2 text-muted">Contact</a>
+                </li>
+            </ul>
+            <p class="text-center text-muted">© 2025 Company, Inc</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous"></script>
+    <script>
+        document.getElementById('loadMoreBtn').addEventListener('click', function () {
+            document.getElementById('moreCards').classList.remove('d-none');
+            this.style.display = 'none';
+        });
+    </script>
+    <script>
+        document.querySelectorAll('.clickable-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const parentCol = card.closest('.col-6, .col-md-3');
+                const detailSection = parentCol.querySelector('.expanded-details');
+
+                const img = card.getAttribute('data-img');
+                const title = card.getAttribute('data-title');
+                const date = card.getAttribute('data-date');
+                const desc = card.getAttribute('data-desc');
+
+                document.querySelectorAll('.expanded-details').forEach(section => {
+                    if (section !== detailSection) section.classList.add('d-none');
+                });
+
+                if (detailSection.classList.contains('d-none')) {
+                    detailSection.classList.remove('d-none');
+                    detailSection.querySelector('img').src = img;
+                    detailSection.querySelector('.expanded-title').textContent = title;
+                    detailSection.querySelector('.expanded-date').textContent = date;
+                    detailSection.querySelector('.expanded-desc').textContent = desc;
+                    detailSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    detailSection.classList.add('d-none');
+                }
+            });
+        });
+    </script>
+    <script>
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+
+            const icon = document.getElementById('icon-search');
+            if (window.scrollY > 50) {
+                icon.id.add('icon-scrolled');
+            } else {
+                icon.id.remove('icon-scrolled');
+            }
+        });
+    </script>
+</body>
+
+</html>

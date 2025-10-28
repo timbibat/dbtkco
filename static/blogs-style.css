@@ -1,0 +1,200 @@
+body {
+    margin: 0;
+    padding-top: 60px;
+}
+.no-style a {
+    color: inherit;
+    text-decoration: none;
+}
+.carousel {
+    margin: 0;
+    padding: 0;
+}
+
+.navbars {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.no-style{
+    color : white;
+}
+
+.navbar a,
+.navbar strong,
+.navbar svg,
+.navbar svg path {
+    color: black;
+    fill: black;
+    transition: color 0.3s ease, fill 0.3s ease;
+}
+
+.navbar-scrolled {
+    background-color: white !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-scrolled a,
+.navbar-scrolled strong,
+.navbar-scrolled svg,
+.navbar-scrolled svg path  {
+    color: black !important;
+    fill: black !important;
+}
+
+
+#icon-scrolled{
+    color: black !important;
+    fill: black !important;
+}
+
+.h2 {
+    text-decoration: none;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+}
+
+p {
+    font-family: "Nunito", sans-serif;
+    font-size: small;
+    font-style: normal;
+    
+}
+
+.col-auto {
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 50px;
+    padding-left: 0px;
+}
+
+.uniform-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.main {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+/* Keep the button background blue and text white */
+.view-cart-btn {
+    background-color: #007bff; /* or any blue you prefer */
+    color: white !important;   /* Force white text */
+    border: none;
+}
+
+.navbar-scrolled .view-cart-btn {
+    color: white !important; /* Ensure text stays white when scrolled */
+}
+
+@media (max-width: 991.98px) {
+  /* Fullscreen slide-in wrapper */
+  .sliding-menu-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.97);
+    z-index: 1050;
+    transform: translateX(100%);
+    transition: transform 0.4s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Show the menu when navbar is open */
+  .navbar-collapse.show .sliding-menu-wrapper {
+    transform: translateX(0);
+  }
+
+  /* Hide Bootstrap collapse flicker */
+  .navbar-collapse {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: 1050;
+    pointer-events: none;
+    background: transparent;
+  }
+
+  .navbar-collapse.show {
+    pointer-events: auto;
+  }
+
+  .navbar-collapse:not(.show) {
+    visibility: hidden;
+  }
+
+  /* Slide-in menu links */
+  .sliding-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+  }
+
+  .sliding-menu .no-style a {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #222;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    padding: 10px 0;
+  }
+
+  .sliding-menu .no-style a:hover {
+    color: #0d6efd;
+  }
+
+  /* Close button (X) */
+  .close-menu-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 2rem;
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+  }
+}
+
+/* For small screens: center the dropdown under the cart icon */
+@media (max-width: 576px) {
+  .cart-dropdown {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+  }
+}
+
+/* Base spacing for mobile/smaller screens */
+.mobile-dbtk-spacing {
+    margin-inline-start: 0.5rem; /* Equivalent to ms-2 */
+    padding-left: 0.5rem;       /* Equivalent to px-2 (left side of text) */
+    padding-right: 0.5rem;      /* Equivalent to px-2 (right side of text) */
+}
+
+/* Spacing for computer mode (lg breakpoint and up) */
+@media (min-width: 992px) { /* This is Bootstrap's 'lg' breakpoint */
+    .computer-dbtk-spacing {
+        margin-inline-start: 2rem !important; /* Equivalent to ms-5, using !important for testing */
+        padding-left: 1rem !important;        /* Equivalent to px-3 */
+        padding-right: 1rem !important;       /* Equivalent to px-3 */
+    }
+}
+
+/* You might need to adjust the justify-content depending on your full layout */
+/* For 'd-flex' the 'ms-X' class controls the margin on the start side of the flex item itself. */
+/* If you want the text inside the strong to be aligned, ensure justify-content is appropriate. */
+/* If 'DBTK' is the only content, 'justify-content-start' is usually the default anyway. */

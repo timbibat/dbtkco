@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Order Summary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin_dashboard.css') }}">
+</head>
+
+<body>
+
+  <header class="fixed-header container-fluid">
+    <form action="{{ url_for('admin_login') }}" method="get" class="d-inline order-md-1 order-2">
+      <button type="submit" class="btn btn-dark">Sign Out</button>
+    </form>
+    <a href="{{ url_for('home') }}" class="header-title order-md-2 order-1">DBTK</a>
+    <button class="btn btn-hamburger d-md-none order-1 order-md-3" type="button" data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+    </button>
+  </header>
+
+  <div class="offcanvas offcanvas-start w-100" tabindex="-1" id="offcanvasNavbar"
+    aria-labelledby="offcanvasNavbarLabel">
+    <div class="offcanvas-header">
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab"
+            aria-controls="orders" aria-selected="false">Order Summary</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tshirt" type="button" role="tab"
+            aria-controls="tshirt" aria-selected="false">T-Shirt</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tom" type="button" role="tab"
+            aria-controls="tom" aria-selected="false">Tom Clutch</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#footwear" type="button" role="tab"
+            aria-controls="footwear" aria-selected="false">Footwear</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#accessories" type="button" role="tab"
+            aria-controls="accessories" aria-selected="false">Accessories</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#stickers" type="button" role="tab"
+            aria-controls="stickers" aria-selected="false">Stickers</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab"
+            aria-controls="users" aria-selected="false">Users</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container-fluid dashboard-content-wrapper">
+    <div class="dashboard-header d-md-none">
+      <h1 class="mb-0 fw-bold">Admin Dashboard</h1>
+    </div>
+
+    <ul class="nav nav-tabs desktop-nav-tabs d-none d-md-flex" id="adminTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button"
+          role="tab" aria-controls="orders" aria-selected="true">Order Summary</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tshirt-tab" data-bs-toggle="tab" data-bs-target="#tshirt" type="button" role="tab"
+          aria-controls="tshirt" aria-selected="false">T-Shirt</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tom-tab" data-bs-toggle="tab" data-bs-target="#tom" type="button" role="tab"
+          aria-controls="tom" aria-selected="false">Tom Clutch</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="footwear-tab" data-bs-toggle="tab" data-bs-target="#footwear" type="button"
+          role="tab" aria-controls="footwear" aria-selected="false">Footwear</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="accessories-tab" data-bs-toggle="tab" data-bs-target="#accessories" type="button"
+          role="tab" aria-controls="accessories" aria-selected="false">Accessories</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="stickers-tab" data-bs-toggle="tab" data-bs-target="#stickers" type="button"
+          role="tab" aria-controls="stickers" aria-selected="false">Stickers</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab"
+          aria-controls="users" aria-selected="false">Users</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="adminTabsContent">
+      <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+        <div class="order-cards-mobile d-md-none">
+          {% for order in orders %}
+          <div class="order-card mb-3 shadow-sm rounded">
+            <div class="order-card-header d-flex justify-content-between align-items-center">
+              <span class="order-id">#{{ order.id }}</span>
+              <span class="order-payment badge bg-dark">{{ order.payment_method }}</span>
+            </div>
+            <div class="order-card-body">
+              <div class="d-flex align-items-center mb-2">
+                {% if order.design %}
+                <img src="{{ order.design }}" alt="Design" class="order-card-img me-2">
+                {% endif %}
+                <div>
+                  <div class="fw-bold">{{ order.apparel }}</div>
+                  <div class="small text-muted">{{ order.accessories }}</div>
+                </div>
+              </div>
+              <div><strong>Customer:</strong> {{ order.name }}</div>
+              <div class="order-email"><strong>Email:</strong> {{ order.email }}</div>
+              <div><strong>Address:</strong> {{ order.address }}, {{ order.barangay }}, {{ order.municipality }}, {{ order.province }}</div>
+              <div><strong>Qty:</strong> {{ order.quantity }}</div>
+              <div><strong>Price:</strong> &#8369;{{ "{:,.2f}".format(order.price | float) }}</div>
+              <div><strong>Total:</strong> &#8369;{{ "{:,.2f}".format(order.quantity * order.price | float) }}</div>
+            </div>
+          </div>
+          {% else %}
+          <div class="text-center text-muted">No orders yet.</div>
+          {% endfor %}
+          <div class="total-earnings-mobile text-end mt-3 fw-bold">
+            Total Earnings: &#8369;{{ "{:,.2f}".format(total_earnings | float) }}
+          </div>
+        </div>
+
+        <div class="table-responsive d-none d-md-block">
+          <table class="table table-bordered table-hover order-table mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Barangay</th>
+                <th>Municipality/City</th>
+                <th>Province</th>
+                <th>Product</th>
+                <th>Design</th>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th> <th>Payment Method</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.email }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.barangay }}</td>
+                <td>{{ order.municipality }}</td>
+                <td>{{ order.province }}</td>
+                <td>{{ order.apparel }}</td>
+                <td>
+                  {% if order.design %}
+                  <img src="{{ order.design }}" alt="Design" style="width: 50px; height: auto;">
+                  {% else %}
+                  <span class="text-muted">N/A</span>
+                  {% endif %}
+                </td>
+                <td>{{ order.accessories }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>&#8369;{{ "{:,.2f}".format(order.price | float) }}</td>
+                <td>&#8369;{{ "{:,.2f}".format(order.quantity * order.price | float) }}</td>
+                <td>{{ order.payment_method }}</td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="14" class="text-center">No orders yet.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-3 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center">
+          <div class="mb-3 mb-md-0">
+            <h5 class="mb-0 fw-bold">Total Earnings: <span>&#8369;{{ "{:,.2f}".format(total_earnings | float) }}</span>
+            </h5>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tshirt" role="tabpanel" aria-labelledby="tshirt-tab mobile-tshirt-tab">
+        <div class="row">
+          {% for product in tshirt_products %}
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm rounded-lg">
+              <div class="product-card-body-content">
+                <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+                <div class="product-details">
+                  <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                  <p class="card-text">Price: {{ product.price }}</p>
+                  <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                  <form class="update-stock-form" data-product-category="tshirt" data-product-name="{{ product.name }}">
+                    <div class="input-group">
+                      <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}"
+                        min="0">
+                      <button type="submit" class="btn btn-black">Update</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tom" role="tabpanel" aria-labelledby="tom-tab mobile-tom-tab">
+        <div class="row">
+          {% for product in tom_products %}
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm rounded-lg">
+              <div class="product-card-body-content">
+                <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+                <div class="product-details">
+                  <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                  <p class="card-text">Price: {{ product.price }}</p>
+                  <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                  <form class="update-stock-form" data-product-category="tom" data-product-name="{{ product.name }}">
+                    <div class="input-group">
+                      <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}"
+                        min="0">
+                      <button type="submit" class="btn btn-black">Update</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="footwear" role="tabpanel" aria-labelledby="footwear-tab mobile-footwear-tab">
+        <div class="row">
+          {% for product in footwear_products %}
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm rounded-lg">
+              <div class="product-card-body-content">
+                <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+                <div class="product-details">
+                  <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                  <p class="card-text">Price: {{ product.price }}</p>
+                  <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                  <form class="update-stock-form" data-product-category="footwear"
+                    data-product-name="{{ product.name }}">
+                    <div class="input-group">
+                      <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}"
+                        min="0">
+                      <button type="submit" class="btn btn-black">Update</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="accessories" role="tabpanel"
+        aria-labelledby="accessories-tab mobile-accessories-tab">
+        <div class="row">
+          {% for product in accessories_products %}
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm rounded-lg">
+              <div class="product-card-body-content">
+                <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+                <div class="product-details">
+                  <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                  <p class="card-text">Price: {{ product.price }}</p>
+                  <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                  <form class="update-stock-form" data-product-category="accessories"
+                    data-product-name="{{ product.name }}">
+                    <div class="input-group">
+                      <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}"
+                        min="0">
+                      <button type="submit" class="btn btn-black">Update</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="stickers" role="tabpanel" aria-labelledby="stickers-tab mobile-stickers-tab">
+        <div class="row">
+          {% for product in stickers_products %}
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm rounded-lg">
+              <div class="product-card-body-content">
+                <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+                <div class="product-details">
+                  <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                  <p class="card-text">Price: {{ product.price }}</p>
+                  <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                  <form class="update-stock-form" data-product-category="stickers"
+                    data-product-name="{{ product.name }}">
+                    <div class="input-group">
+                      <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}"
+                        min="0">
+                      <button type="submit" class="btn btn-black">Update</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab mobile-users-tab">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // JavaScript for updating stock
+    document.querySelectorAll('.update-stock-form').forEach(form => {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const productCategory = form.getAttribute('data-product-category');
+        const productName = form.getAttribute('data-product-name');
+        const stockInput = form.querySelector('input[name="stock"]');
+        const newStock = stockInput.value;
+
+        fetch(`/admin/update_stock/${encodeURIComponent(productCategory)}/${encodeURIComponent(productName)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `stock=${encodeURIComponent(newStock)}`
+        })
+          .then(response => {
+            // Remove redirect logic: just update UI, do not redirect
+            if (!response.ok) throw new Error();
+            const stockStatus = form.parentElement.querySelector('.stock-status');
+            if (stockStatus) stockStatus.textContent = newStock;
+            stockInput.classList.add('is-valid');
+            setTimeout(() => stockInput.classList.remove('is-valid'), 1000);
+          })
+          .catch(() => {
+            stockInput.classList.add('is-invalid');
+            setTimeout(() => stockInput.classList.remove('is-invalid'), 1000);
+          });
+      });
+    });
+
+    // Handle active tab display for mobile offcanvas and tab switching
+    document.addEventListener('DOMContentLoaded', function () {
+      var offcanvasNavbar = document.getElementById('offcanvasNavbar');
+      var desktopTabs = document.getElementById('adminTabs');
+
+      function activateTab(tabId) {
+        document.querySelectorAll('.tab-pane').forEach(pane => {
+          pane.classList.remove('show', 'active');
+        });
+        document.querySelectorAll('#adminTabs .nav-link').forEach(link => {
+          link.classList.remove('active');
+          link.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('#offcanvasNavbar .nav-link').forEach(link => {
+          link.classList.remove('active');
+          link.setAttribute('aria-selected', 'false');
+        });
+
+        var targetPane = document.getElementById(tabId);
+        if (targetPane) {
+          targetPane.classList.add('show', 'active');
+        }
+
+        var desktopLink = document.getElementById(tabId + '-tab');
+        if (desktopLink) {
+          desktopLink.classList.add('active');
+          desktopLink.setAttribute('aria-selected', 'true');
+        }
+
+        var mobileLink = document.querySelector('#offcanvasNavbar button[data-bs-target="#' + tabId + '"]');
+        if (mobileLink) {
+          mobileLink.classList.add('active');
+          mobileLink.setAttribute('aria-selected', 'true');
+        }
+      }
+
+      activateTab('orders');
+
+      if (offcanvasNavbar) {
+        offcanvasNavbar.addEventListener('show.bs.offcanvas', function () {
+          var activeTabPane = document.querySelector('.tab-pane.show.active');
+          if (activeTabPane) {
+            var tabId = activeTabPane.id;
+            document.querySelectorAll('#offcanvasNavbar .nav-link').forEach(link => {
+              link.classList.remove('active');
+              link.setAttribute('aria-selected', 'false');
+            });
+            var mobileNavLink = document.querySelector('#offcanvasNavbar button[data-bs-target="#' + tabId + '"]');
+            if (mobileNavLink) {
+              mobileNavLink.classList.add('active');
+              mobileNavLink.setAttribute('aria-selected', 'true');
+            }
+          }
+        });
+
+        document.querySelectorAll('#offcanvasNavbar .nav-link').forEach(link => {
+          link.addEventListener('click', function () {
+            var targetTabId = this.getAttribute('data-bs-target').substring(1);
+            activateTab(targetTabId);
+            var offcanvas = bootstrap.Offcanvas.getInstance(offcanvasNavbar);
+            if (offcanvas) {
+              offcanvas.hide();
+            }
+          });
+        });
+      }
+
+      if (desktopTabs) {
+        desktopTabs.addEventListener('click', function (e) {
+          if (e.target.classList.contains('nav-link')) {
+            const targetTabId = e.target.getAttribute('data-bs-target').substring(1);
+            activateTab(targetTabId);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

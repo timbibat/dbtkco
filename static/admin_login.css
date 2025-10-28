@@ -1,0 +1,117 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    margin: 0;
+    padding-top: 60px; /* Space for the fixed header */
+    padding-bottom: 20px; /* Small padding at the bottom */
+}
+
+/* Fixed Header for DBTK title */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f9fa; /* Match body background */
+    z-index: 1030;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center; /* Center DBTK title */
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+.dbtk-title {
+    font-size: 1.8rem; /* Adjusted font size for header */
+    font-weight: 700;
+    color: #000; /* Black for DBTK title */
+    text-decoration: none;
+}
+.dbtk-title:hover {
+    color: #333; /* Slightly darker on hover */
+}
+
+/* Main content wrapper - for centering content */
+.main-content-wrapper {
+    flex-grow: 1; /* Allow content to fill remaining space */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically in available space */
+    padding: 20px; /* Padding for desktop view */
+}
+
+/* Styling for the form area - acts as the "card" content without the card border/shadow */
+.form-area-desktop {
+    width: 100%;
+    max-width: 500px; /* Max width for desktop form content */
+    padding: 40px; /* Internal padding for form content on desktop */
+    background-color: #fff; /* White background for the form area on desktop */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Black button style */
+.btn-black {
+    background-color: black !important;
+    color: white !important;
+    border-color: black !important;
+    border-radius: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.btn-black:hover {
+    background-color: #333 !important;
+    border-color: #333 !important;
+}
+.btn-black:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25) !important;
+}
+.btn-black:active {
+    background-color: #1a1a1a !important;
+    border-color: #1a1a1a !important;
+}
+
+/* Lighter link style */
+.link-lighter {
+    color: #6c757d !important; /* Bootstrap's muted text color */
+    text-decoration: none;
+    font-weight: 500; /* Slightly less bold */
+}
+.link-lighter:hover {
+    text-decoration: underline;
+    color: #495057 !important;
+}
+
+/* Responsive adjustments for mobile (full screen, no card boundaries) */
+@media (max-width: 767.98px) {
+    body {
+        padding-top: 60px; /* Consistent top padding for mobile */
+        padding-bottom: 20px; /* Consistent bottom padding for mobile */
+    }
+    .dbtk-title {
+        font-size: 1.5rem; /* Smaller font for mobile header title */
+    }
+    .main-content-wrapper {
+        padding: 0 20px; /* Add horizontal padding to the wrapper instead of form-area */
+        align-items: flex-start; /* Align content to the top of the available space */
+        justify-content: center; /* Center horizontally for better alignment with DBTK */
+        padding-top: 20px; /* Add some top padding to push content down from header */
+    }
+    .form-area-desktop {
+        width: 100%;
+        max-width: none; /* Remove max-width constraint */
+        padding: 0; /* Remove internal padding, handled by wrapper now */
+        background-color: transparent; /* Make background transparent */
+        border-radius: 0; /* Remove rounded corners */
+        box-shadow: none; /* Remove shadow */
+    }
+    /* Ensure columns don't add extra padding */
+    /* Removed row and col classes around form-area-desktop, so this block is no longer strictly necessary,
+       but kept for robustness in case other content uses similar structures. */
+    .row.justify-content-center > div[class*="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

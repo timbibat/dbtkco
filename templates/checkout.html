@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='checkout.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col px-0 mx-0">
+                <nav class="navbar navbar-expand-xxl position-fixed top-0 w-100 z-3 py-3">
+                    <a href="{{ url_for('home') }}" class="h2 mx-2 px-2">
+                        <strong
+                            class="d-flex justify-content-start mobile-dbtk-spacing computer-dbtk-spacing">DBTK</strong>
+                    </a>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+                        <div class="sliding-menu-wrapper">
+                            <div
+                                class="d-flex flex-column flex-lg-row justify-content-center align-items-center w-100 sliding-menu mx-5">
+                                <button class="close-menu-btn d-lg-none p-1 me-3" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-label="Close menu"
+                                    style="z-index: 1050;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                                <div class="mx-5 no-style"><a href="{{ url_for('home') }}">Home</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('brand') }}">Brand</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('shop') }}">Shop</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('blog') }}">Blog</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('lookbook') }}">Lookbook</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('aboutus') }}">About Us</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('contact') }}">Contact</a></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center ms-auto px-2">
+                        <div class="dropdown profile-dropdown">
+                            <button class="btn btn-white position-relative" type="button" id="profileDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="background: transparent;">
+                                <i class="bi bi-person-circle profile-icon-white" id="profileIcon"
+                                    style="font-size: 1.7rem;"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                {% if session.get('user_logged_in') or session.get('admin_logged_in') %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('admin_logout') }}" style="color: #000;">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="dropdown-item-text" style="color: #000;">
+                                        <i class="bi bi-person"></i>
+                                        {{ session['firstname'] }} {{ session['lastname'] }}
+                                    </span>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('admin_login') }}" style="color: #000;">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('signup') }}" style="color: #000;">
+                                        <i class="bi bi-person-plus me-2"></i> Sign Up
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-white position-relative" type="button" id="cartDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                </svg>
+                                <span id="cartCount"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end p-3 cart-dropdown" style="min-width: 250px;"
+                                aria-labelledby="cartDropdown">
+                                <h6 class="dropdown-header">Your Shopping Cart</h6>
+                                <div id="cartItems" class="mb-2" style="max-height: 200px; overflow-y: auto;">
+                                    <p class="text-muted mb-0">Your cart is empty</p>
+                                </div>
+                                <div class="d-flex justify-content-between border-top pt-2">
+                                    <h6>Total:</h6>
+                                    <h6 id="cartTotal">₱0.00</h6>
+                                </div>
+                                <div class="d-grid gap-2 mt-2">
+                                    <a href="{{ url_for('cart_page') }}" class="btn btn-primary view-cart-btn">View
+                                        Cart</a>
+                                    <button id="checkoutBtn" class="btn btn-primary" disabled>Checkout</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col px-0 mx-0"><button class="btn btn-white" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#searchBar" aria-expanded="false" aria-controls="searchBar">
+                                <svg class="svg-icon icon-search" width="20px" height="20px" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g fill="currentColor" fill-rule="nonzero">
+                                        <path
+                                            d="M19.129,18.164 L14.611,13.644 C15.763,12.271 16.463,10.501 16.463,8.567 C16.463,4.206 12.928,0.671 8.567,0.671 C4.206,0.671 0.671,4.206 0.671,8.567 C0.671,12.928 4.206,16.463 8.567,16.463 C10.501,16.463 12.272,15.765 13.645,14.61 L18.165,19.129 C18.431,19.397 18.864,19.397 19.13,19.129 C19.396,18.863 19.396,18.431 19.129,18.164 Z M8.53051964,15.25 C4.85786,15.25 1.88,12.27 1.88,8.6 C1.88,4.93 4.85786,1.95 8.53052,1.95 C12.2032,1.95 15.18,4.93 15.18,8.6 C15.18,12.27 12.2032,15.25 8.53052,15.25 Z" />
+                                    </g>
+                                </svg>
+                            </button>
+                            <div id="searchBar"
+                                class="collapse position-fixed top-0 start-0 w-100 bg-white shadow-lg z-1050">
+                                <div class="container py-1 mt-3">
+                                    <div class="input-group mb-1">
+                                        <input type="text" class="form-control form-control-lg" id="searchInput"
+                                            placeholder="Search products...">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#searchBar">×</button>
+                                    </div>
+                                    <div id="searchProductGrid" class="row justify-content-center"
+                                        style="max-height: 400px; overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="navbar-toggler bg-white rounded" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5 mt-5">
+        <h1 class="text-center mb-4">Checkout</h1>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body" id="cart-summary">
+                        <div id="checkoutItems"></div>
+                        <hr>
+                        <h5 class="mt-3 text-end">Total: <span id="checkoutTotal">₱0.00</span></h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Shipping Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="checkoutForm">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" id="name" class="form-control" required
+                                    value="{% if session.get('firstname') and session.get('lastname') %}{{ session['firstname'] }} {{ session['lastname'] }}{% endif %}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" class="form-control" required
+                                    value="{% if session.get('email') %}{{ session['email'] }}{% endif %}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="province" class="form-label">Province</label>
+                                <select id="province" class="form-select" required>
+                                    <option value="">Select Province</option>
+                                    <option value="Batangas">Batangas</option>
+                                    <option value="Bulacan">Bulacan</option>
+                                    <option value="Cavite">Cavite</option>
+                                    <option value="Ilocos Norte">Ilocos Norte</option>
+                                    <option value="Laguna">Laguna</option>
+                                    <option value="Manila">Manila</option>
+                                    <option value="Nueva Ecija">Nueva Ecija</option>
+                                    <option value="Pampanga">Pampanga</option>
+                                    <option value="Quezon">Quezon</option>
+                                    <option value="Rizal">Rizal</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="municipality" class="form-label">Municipality/City</label>
+                                <select id="municipality" class="form-select" required>
+                                    <option value="">Select Municipality/City</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="barangay" class="form-label">Barangay</label>
+                                <select id="barangay" class="form-select" required>
+                                    <option value="">Select Barangay</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="zipcode" class="form-label">Zip Code</label>
+                                <input type="text" id="zipcode" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="houseNumber" class="form-label">House Number</label>
+                                <input type="text" id="houseNumber" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="landmark" class="form-label">Landmark (optional)</label>
+                                <input type="text" id="landmark" class="form-control"
+                                    placeholder="e.g. Near church, beside 7-Eleven">
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="cod"
+                                    value="Cash on Delivery" required>
+                                <label class="form-check-label" for="cod">Cash on Delivery</label>
+                            </div>
+                            <div id="codPhoneContainer" class="mb-3" style="display:none;">
+                                <label for="codPhone" class="form-label">Phone Number</label>
+                                <input type="text" id="codPhone" class="form-control" placeholder="09XXXXXXXXX">
+                                <div class="form-text">Enter a valid Philippine mobile number.
+                                </div>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="gcash"
+                                    value="GCash" required>
+                                <label class="form-check-label d-flex align-items-center" for="gcash">
+                                    GCash
+                                    <img src="https://images.seeklogo.com/logo-png/52/1/gcash-logo-png_seeklogo-522261.png"
+                                        alt="GCash" style="height:20px; margin-left:8px;">
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="paymaya"
+                                    value="PayMaya" required>
+                                <label class="form-check-label d-flex align-items-center" for="paymaya">
+                                    PayMaya
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/PayMaya_Logo.png"
+                                        alt="PayMaya" style="height:20px; margin-left:8px;">
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="card"
+                                    value="Debit/Credit Card" required>
+                                <label class="form-check-label d-flex align-items-center" for="card">
+                                    Debit/Credit Card
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa"
+                                        style="height:20px; margin-left:8px;">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                                        alt="Mastercard" style="height:20px; margin-left:4px;">
+                                </label>
+                            </div>
+                            <div id="cardDetails" class="mb-3 p-3" style="display: none;">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <label for="cardNumber" class="form-label">Card Number</label>
+                                        <input type="text" id="cardNumber" class="form-control" maxlength="19"
+                                            placeholder="1234 5678 9012 3456">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="cardExpiry" class="form-label">Expiry</label>
+                                        <input type="text" id="cardExpiry" class="form-control" maxlength="5"
+                                            placeholder="MM/YY">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="cardCVC" class="form-label">CVC</label>
+                                        <input type="text" id="cardCVC" class="form-control" maxlength="4" placeholder="CVC">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="qrCodeContainer" class="mb-3 p-3 text-center" style="display: none;">
+                                <h6>Please scan to pay:</h6>
+                                <div id="qrCodeImage"></div>
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100">Place Order</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/checkout.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script_tom.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const qrCodes = {
+            "GCash": "{{ url_for('static', filename='img/gcash.jpg') }}",
+            "PayMaya": "{{ url_for('static', filename='img/paymaya.jpg') }}"
+        };
+
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+
+            const icon = document.getElementById('icon-search');
+            if (window.scrollY > 50) {
+                // You had `icon.id.add('icon-scrolled');` and `icon.id.remove('icon-scrolled');`
+                // which is incorrect. You should modify the classList of the element directly.
+                icon.classList.add('icon-scrolled');
+            } else {
+                icon.classList.remove('icon-scrolled');
+            }
+        });
+
+        document.querySelectorAll('input[name="paymentMethod"]').forEach(function (el) {
+            el.addEventListener('change', function () {
+                const cardDetails = document.getElementById('cardDetails');
+                const codPhoneContainer = document.getElementById('codPhoneContainer');
+                const qrCodeContainer = document.getElementById('qrCodeContainer');
+                const qrCodeImage = document.getElementById('qrCodeImage');
+
+                // Hide all extra containers first
+                cardDetails.style.display = 'none';
+                codPhoneContainer.style.display = 'none';
+                qrCodeContainer.style.display = 'none';
+                qrCodeImage.innerHTML = ''; // Clear QR code image when hiding
+
+                if (this.value === 'Debit/Credit Card') {
+                    cardDetails.style.display = 'block';
+                } else if (this.value === 'Cash on Delivery') {
+                    codPhoneContainer.style.display = 'block';
+                } else if (this.value === "GCash" || this.value === "PayMaya") {
+                    qrCodeContainer.style.display = "block";
+                    qrCodeImage.innerHTML = `<img src="${qrCodes[this.value]}" alt="${this.value} QR Code" class="img-fluid" style="max-width:200px;">`;
+                }
+            });
+        });
+
+        const municipalities = {
+            "Batangas": ["Batangas", "Bauan", "Lipa", "Santo Tomas", "Tanauan"],
+            "Cavite": ["Bacoor", "Dasmariñas", "Imus", "Tagaytay", "Tanza"],
+            "Laguna": ["Biñan", "Calamba", "Cabuyao", "San Pablo", "Santa Rosa"],
+            "Manila": ["Binondo", "Ermita", "Malate", "Paco", "Pandacan"],
+            "Quezon": ["Candelaria", "Lucena", "Sariaya", "Tayabas", "Tiaong"],
+            "Rizal": ["Angono", "Antipolo", "Binangonan", "Cainta", "Taytay"],
+            "Pampanga": ["Angeles City", "Apalit", "Arayat", "Mabalacat", "San Fernando"],
+            "Bulacan": ["Baliuag", "Malolos", "Marilao", "Meycauayan", "San Jose del Monte"],
+            "Nueva Ecija": ["Aliaga", "Cabanatuan", "Gapan", "Palayan", "San Jose"],
+            "Ilocos Norte": ["Bacarra", "Badoc", "Bangui", "Batac", "Laoag"]
+        };
+
+        const barangays = {
+            // Batangas
+            "Batangas": ["Alangilan", "Balagtas", "Balete", "San Agapito", "San Antonio"],
+            "Bauan": ["Aplaya", "As-Is", "Baguilawa", "Bolo", "Cupang"],
+            "Lipa": ["Anilao", "Antipolo", "Balintawak", "Banaybanay", "Bolbok"],
+            "Santo Tomas": ["Santa Anastacia", "San Miguel", "San Pedro", "San Rafael", "San Vicente"],
+            "Tanauan": ["Altura", "Ambulong", "Bagbag", "Balele", "Banjo East"],
+
+            // Cavite
+            "Bacoor": ["Alima", "Bayanan", "Digman", "Kaingin", "Tabing Dagat"],
+            "Dasmariñas": ["Burol", "Langkaan", "Paliparan", "Salitran", "Sampaloc"],
+            "Imus": ["Bagong Silang", "Carsadang Bago I", "Magdalo", "Maharlika", "Palico I"],
+            "Tagaytay": ["Asisan", "Dapdap East", "Guinhawa North", "Iruhin East", "Kaybagal Central"],
+            "Tanza": ["Amaya I", "Bagtas", "Bucal", "Calibuyo", "Daang Amaya I"],
+
+            // Laguna
+            "Biñan": ["Biñan", "Canlalay", "De La Paz", "Langkiwa", "Malaban"],
+            "Cabuyao": ["Baclaran", "Banay-Banay", "Bigaa", "Butong", "Diezmo"],
+            "Calamba": ["Bagong Kalsada", "Banadero", "Bucal", "Canlubang", "Halang"],
+            "San Pablo": ["Atisan", "Bautista", "Concepcion", "Dolores", "San Diego"],
+            "Santa Rosa": ["Aplaya", "Balibago", "Caingin", "Dila", "Don Jose"],
+
+            // Manila
+            "Binondo": ["287", "288", "289", "290", "291"],
+            "Ermita": ["659", "660", "661", "662", "663"],
+            "Malate": ["699", "700", "701", "702", "703"],
+            "Paco": ["662", "663", "664", "665", "666"],
+            "Pandacan": ["833", "834", "835", "836", "837"],
+
+            // Quezon
+            "Candelaria": ["Bukal Norte", "Bukal Sur", "Buenavista East", "Buenavista West", "Malabanban Norte"],
+            "Lucena": ["Barra", "Bocohan", "Cotta", "Dalahican", "Salinas"],
+            "Sariaya": ["Balubal", "Bignay I", "Bucal", "Canda", "Gibanga"],
+            "Tayabas": ["Alitao", "Alupay", "Angeles Zone I", "Bagumbayan", "Calantas"],
+            "Tiaong": ["Anastacia", "Aquino", "Ayusan I", "Bula", "Cabatang"],
+
+            // Rizal
+            "Angono": ["Kalayaan", "Mahabang Parang", "Poblacion Ibaba", "Poblacion Itaas", "San Isidro"],
+            "Antipolo": ["Cupang", "Dalig", "Inarawan", "Mayamot", "Muntingdilaw"],
+            "Binangonan": ["Batingan", "Calumpang", "Ginoong Sanay", "Ithan", "Libis"],
+            "Cainta": ["San Andres", "San Isidro", "San Juan", "San Roque", "Santo Domingo"],
+            "Taytay": ["Dolores", "Muzon", "San Isidro", "San Juan", "Santa Ana"],
+
+            // Pampanga
+            "Angeles City": ["Balibago", "Cutcut", "Malabanias", "Pulungbulu", "Sto. Rosario"],
+            "Apalit": ["Balucuc", "Calantipe", "Cansinala", "Capalangan", "Colgante"],
+            "Arayat": ["Arenas", "Baliti", "Batasan", "Buensuceso", "Candating"],
+            "Mabalacat": ["Atlu-Bola", "Bundagul", "Camachiles", "Dau", "Dolores"],
+            "San Fernando": ["Alasas", "Baliti", "Bulaon", "Calulut", "Dela Paz Norte"],
+
+            // Bulacan
+            "Baliuag": ["Bagong Nayon", "Bagong Silang", "Concepcion", "Makinabang", "Paitan"],
+            "Malolos": ["Atlag", "Bagna", "Balayong", "Bulihan", "Calero"],
+            "Marilao": ["Abangan Norte", "Abangan Sur", "Ibayo", "Lambakin", "Lias"],
+            "Meycauayan": ["Bahay Pare", "Bancal", "Bayugo", "Caingin", "Calvario"],
+            "San Jose del Monte": ["Assumption", "Citrus", "Dulong Bayan", "Fatima I", "Fatima II"],
+
+            // Nueva Ecija
+            "Aliaga": ["Bibiclat", "Bucot", "La Purisima", "Macabaclay", "Pantoc"],
+            "Cabanatuan": ["Aduas Centro", "Aduas Norte", "Aduas Sur", "Bagong Sikat", "Bakero"],
+            "Gapan": ["Balante", "Bayanihan", "Bulak", "Mabuga", "Mangino"],
+            "Palayan": ["Aulo", "Caballero", "Cabu", "Ganaderia", "Imelda"],
+            "San Jose": ["Abar 1st", "Abar 2nd", "Calaocan", "Caanawan", "Malasin"],
+
+            // Ilocos Norte
+            "Bacarra": ["Cabulalaan", "Cabusligan", "Caungay", "Gabu Norte", "Gabu Sur"],
+            "Badoc": ["Alay-Nangbabaan", "Alay-Nangato", "Aring", "Bagani Campo", "Bagani Gabor"],
+            "Bangui": ["Abaca", "Baruyen", "Basi", "Dadaeman", "Lanao"],
+            "Batac": ["Ablan", "Alangatan", "Baligat", "Barani", "Bil-loca"],
+            "Laoag": ["San Lorenzo", "Santa Joaquina", "San Pedro", "San Guillermo", "San Marcos"]
+        };
+
+        document.getElementById("province").addEventListener("change", function () {
+            const prov = this.value;
+            const muniSelect = document.getElementById("municipality");
+            muniSelect.innerHTML = '<option value="">Select Municipality/City</option>';
+            document.getElementById("barangay").innerHTML = '<option value="">Select Barangay</option>';
+            if (municipalities[prov]) {
+                municipalities[prov].forEach(muni => {
+                    muniSelect.innerHTML += `<option value="${muni}">${muni}</option>`;
+                });
+            }
+        });
+
+        document.getElementById("municipality").addEventListener("change", function () {
+            const muni = this.value;
+            const brgySelect = document.getElementById("barangay");
+            brgySelect.innerHTML = '<option value="">Select Barangay</option>';
+            if (barangays[muni]) {
+                barangays[muni].forEach(brgy => {
+                    brgySelect.innerHTML += `<option value="${brgy}">${brgy}</option>`;
+                });
+            }
+        });
+
+        // Card validation helpers
+        function isValidCardNumber(number) {
+            // Remove spaces and check for 16 digits
+            return /^\d{16}$/.test(number.replace(/\s+/g, ''));
+        }
+        function isValidExpiry(expiry) {
+            // MM/YY format, valid month, and not expired
+            if (!/^\d{2}\/\d{2}$/.test(expiry)) return false;
+            const [mm, yy] = expiry.split('/').map(Number);
+            if (mm < 1 || mm > 12) return false;
+            const now = new Date();
+            const currentYear = now.getFullYear() % 100;
+            const currentMonth = now.getMonth() + 1;
+            return (yy > currentYear) || (yy === currentYear && mm >= currentMonth);
+        }
+        function isValidCVC(cvc) {
+            return /^\d{3,4}$/.test(cvc);
+        }
+
+        // Format card number as user types
+        document.getElementById('cardNumber').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '').slice(0, 16);
+            value = value.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = value;
+        });
+
+        // **FIX: Automatically input slash for expiry date**
+        document.getElementById('cardExpiry').addEventListener('input', function (e) {
+            let input = e.target.value;
+            // Remove all non-digits
+            input = input.replace(/\D/g, '');
+
+            if (input.length > 2) {
+                // Add slash after the first two digits (MM)
+                input = input.substring(0, 2) + '/' + input.substring(2, 4);
+            }
+
+            // Limit to MM/YY format (5 characters)
+            if (input.length > 5) {
+                input = input.substring(0, 5);
+            }
+            e.target.value = input;
+        });
+
+        // Philippine phone number validation
+        function isValidPHPhone(phone) {
+            return /^09\d{9}$/.test(phone);
+        }
+    </script>
+</body>
+
+</html>

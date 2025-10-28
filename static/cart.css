@@ -1,0 +1,505 @@
+body {
+    margin: 0;
+    padding-top: 110px;
+}
+
+.no-style a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.carousel {
+    margin: 0;
+    padding: 0;
+}
+
+.navbars {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.no-style {
+    color: white;
+}
+
+.navbar a,
+.navbar strong,
+.navbar svg,
+.navbar svg path {
+    color: black;
+    fill: black;
+    transition: color 0.3s ease, fill 0.3s ease;
+}
+
+.navbar-scrolled {
+    background-color: white !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-scrolled a,
+.navbar-scrolled strong,
+.navbar-scrolled svg,
+.navbar-scrolled svg path {
+    color: black !important;
+    fill: black !important;
+}
+
+#icon-scrolled {
+    color: black !important;
+    fill: black !important;
+}
+
+.h2 {
+    text-decoration: none;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+}
+
+p {
+    font-family: "Nunito", sans-serif;
+    font-size: small;
+    font-style: normal;
+}
+
+.col-auto {
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 80px;
+    padding-left: 0px;
+}
+
+.uniform-img {
+    display: block;
+    margin: auto;
+    width: 100%;
+}
+
+.heading-space {
+    margin-bottom: 1rem;
+    display: block;
+}
+
+/* Keep the button background blue and text white */
+.view-cart-btn {
+    background-color: #007bff;
+    color: white !important;
+    border: none;
+}
+
+.navbar-scrolled .view-cart-btn {
+    color: white !important;
+}
+
+/* Unified Cart Item Styling (Applies to both mobile and desktop via new class 'cart-item-card') */
+.cart-item-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item-card .cart-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-item-card .cart-item-details {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.cart-item-card .cart-item-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.cart-item-card .cart-item-meta {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+.cart-item-card .cart-item-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #198754;
+}
+
+/* Unified Quantity Controls */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 10px 0;
+}
+
+.quantity-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #dee2e6;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.quantity-btn:hover,
+.quantity-btn:active {
+    background: #e9ecef;
+    transform: scale(0.95);
+}
+
+.quantity-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.quantity-display {
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* Unified Remove Button */
+.remove-item-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: #dc3545;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.remove-item-btn:hover,
+.remove-item-btn:active {
+    background: #c82333;
+    transform: scale(0.95);
+}
+
+/* Unified Action Buttons Container */
+.cart-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 0 15px; /* Adjust padding as needed for desktop */
+}
+
+.cart-action-btn {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.clear-cart-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.clear-cart-btn:hover,
+.clear-cart-btn:active {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.checkout-btn-style {
+    background: #198754;
+    color: white;
+}
+
+.checkout-btn-style:hover,
+.checkout-btn-style:active {
+    background: #157347;
+    transform: translateY(-1px);
+}
+
+.checkout-btn-style:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Unified Total Display */
+.cart-total-container {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 15px; /* Adjust margin for desktop, can be `margin: 20px auto;` with `max-width` */
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-total-label {
+    font-size: 18px;
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+.cart-total-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #198754;
+}
+
+/* Empty Cart Message */
+.empty-cart-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.empty-cart-message i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-cart-message h5 {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+/* Stock Warning Styles */
+.stock-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #856404;
+}
+
+.stock-info {
+    font-size: 12px;
+    color: #17a2b8;
+    margin-top: 4px;
+}
+
+@media (max-width: 991.98px) {
+    /* Fullscreen slide-in wrapper */
+    .sliding-menu-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.97);
+        z-index: 1050;
+        transform: translateX(100%);
+        transition: transform 0.4s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Show the menu when navbar is open */
+    .navbar-collapse.show .sliding-menu-wrapper {
+        transform: translateX(0);
+    }
+
+    /* Hide Bootstrap collapse flicker */
+    .navbar-collapse {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100%;
+        z-index: 1050;
+        pointer-events: none;
+        background: transparent;
+    }
+
+    .navbar-collapse.show {
+        pointer-events: auto;
+    }
+
+    .navbar-collapse:not(.show) {
+        visibility: hidden;
+    }
+
+    /* Slide-in menu links */
+    .sliding-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+        width: 100%;
+        max-width: 90%;
+    }
+
+    .sliding-menu .no-style a {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: #222;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        padding: 10px 0;
+    }
+
+    .sliding-menu .no-style a:hover {
+        color: #0d6efd;
+    }
+
+    /* Close button (X) */
+    .close-menu-btn {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        font-size: 2rem;
+        font-weight: bold;
+        background: none;
+        border: none;
+        color: #333;
+        cursor: pointer;
+    }
+
+    /* Mobile-specific cart styling - some will now be handled by unified classes */
+    body {
+        padding-top: 90px;
+    }
+
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+/* For small screens: center the dropdown under the cart icon */
+@media (max-width: 576px) {
+    .cart-dropdown {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
+        min-width: 280px !important;
+    }
+
+    /* Make dropdown items more touch-friendly */
+    .cart-dropdown .btn {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    /* Improve cart item display in dropdown */
+    .cart-dropdown img {
+        width: 60px !important;
+        height: 60px !important;
+    }
+
+    /* Mobile page title */
+    .mobile-page-title {
+        font-size: 24px;
+        text-align: center;
+        margin: 20px 0;
+        font-weight: 600;
+    }
+}
+
+/* Media queries for hiding/showing mobile/desktop specific layouts.
+   We will now show the unified cart structure on both. */
+@media (min-width: 992px) {
+    /* Ensure the unified desktop layout is always visible on large screens */
+    .desktop-cart-layout {
+        display: block !important;
+    }
+
+    /* Hide the old mobile-specific layout elements on desktop */
+    .mobile-cart-container,
+    .mobile-page-title {
+        display: none !important;
+    }
+
+    /* Adjust total and action buttons for desktop */
+    .cart-total-container {
+        max-width: 700px; /* Adjust as needed */
+        margin: 20px auto;
+    }
+
+    .cart-action-buttons {
+        max-width: 700px; /* Adjust as needed */
+        margin: 0 auto 20px auto; /* Center buttons below total */
+        flex-direction: row; /* Make buttons horizontal on desktop */
+        justify-content: center;
+    }
+
+    .cart-action-btn {
+        width: auto; /* Allow buttons to size based on content */
+        flex-grow: 1; /* Distribute space evenly */
+    }
+}
+
+/* Base spacing for mobile/smaller screens */
+.mobile-dbtk-spacing {
+    margin-inline-start: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Spacing for computer mode (lg breakpoint and up) */
+@media (min-width: 992px) {
+    .computer-dbtk-spacing {
+        margin-inline-start: 2rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+/* Smooth scrolling for better mobile experience */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Improve touch targets */
+@media (max-width: 991.98px) {
+    button, .btn, a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Improve form controls */
+    .form-control, .form-select {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px 15px;
+    }
+
+    /* Better spacing for mobile */
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Improve readability */
+    h3, h4, h5 {
+        line-height: 1.3;
+    }
+
+    p, small {
+        line-height: 1.4;
+    }
+}

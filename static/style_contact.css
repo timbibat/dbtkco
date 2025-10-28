@@ -1,0 +1,413 @@
+/* ==== Base Reset ==== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  padding-top: 110px;
+}
+
+/* ==== Header ==== */
+.header {
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #1f2937;
+  letter-spacing: -0.025em;
+}
+
+@media (min-width: 768px) {
+  .header h1 {
+    font-size: 4rem;
+  }
+}
+
+/* ==== Main Content ==== */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+}
+
+/* ==== Map Section ==== */
+.map-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.map-container {
+  width: 100%;
+  height: 256px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .map-container {
+    height: 320px;
+  }
+}
+
+.map-hint {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ==== Contact Info Cards ==== */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.info-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  transition: box-shadow 0.3s;
+}
+
+.info-card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.info-card h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-text {
+  color: #4b5563;
+  text-align: center;
+}
+
+.info-text .label {
+  font-weight: 600;
+}
+
+/* ==== Icons ==== */
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.icon-red { color: #ef4444; }
+.icon-blue { color: #3b82f6; }
+.icon-green { color: #10b981; }
+.icon-twitter { color: #60a5fa; }
+.icon-instagram { color: #ec4899; }
+
+/* ==== Business Hours ==== */
+.business-hours {
+  margin-top: 48px;
+  text-align: center;
+}
+
+.hours-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  max-width: 512px;
+  margin: 0 auto;
+}
+
+.hours-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.hours-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  color: #4b5563;
+}
+
+.hours-item .day {
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .hours-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ==== Mobile Responsive Tweaks ==== */
+@media (max-width: 576px) {
+  .main-content {
+    padding: 20px 12px 40px;
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .map-container {
+    height: 200px;
+  }
+
+  .info-card h2 {
+    font-size: 1.25rem;
+  }
+
+  .info-text {
+    font-size: 0.9rem;
+  }
+
+  .hours-card {
+    padding: 16px;
+    width: 100%;
+  }
+
+  .grid {
+    gap: 24px;
+  }
+}
+
+/* ==== Utility and Global Overrides ==== */
+p {
+  font-family: "Nunito", sans-serif;
+  font-size: small;
+}
+
+.h2 {
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+.uniform-img {
+  display: block;
+  margin: auto;
+  width: 100%;
+}
+
+.view-cart-btn {
+  background-color: #007bff;
+  color: white !important;
+  border: none;
+}
+
+.navbar-scrolled .view-cart-btn {
+  color: white !important;
+}
+
+.carousel {
+  padding: 0 8px;
+}
+
+.no-style a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.navbars {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.navbar a,
+.navbar strong,
+.navbar svg,
+.navbar svg path {
+  color: black;
+  fill: black;
+  transition: color 0.3s ease, fill 0.3s ease;
+}
+
+.navbar-scrolled {
+  background-color: white !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-scrolled a,
+.navbar-scrolled strong,
+.navbar-scrolled svg,
+.navbar-scrolled svg path {
+  color: black !important;
+  fill: black !important;
+}
+
+#searchBar,
+#searchBar * {
+  color: black !important;
+  fill: black !important;
+}
+
+#searchBar .btn.add-to-cart {
+  color: white !important;
+}
+
+/* ==== Sliding Menu (Mobile Nav) ==== */
+@media (max-width: 991.98px) {
+  .sliding-menu-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.97);
+    z-index: 1050;
+    transform: translateX(100%);
+    transition: transform 0.4s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-collapse.show .sliding-menu-wrapper {
+    transform: translateX(0);
+  }
+
+  .navbar-collapse {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: 1050;
+    pointer-events: none;
+    background: transparent;
+  }
+
+  .navbar-collapse.show {
+    pointer-events: auto;
+  }
+
+  .navbar-collapse:not(.show) {
+    visibility: hidden;
+  }
+
+  .sliding-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+  }
+
+  .sliding-menu .no-style a {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #222;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    padding: 10px 0;
+  }
+
+  .sliding-menu .no-style a:hover {
+    color: #0d6efd;
+  }
+
+  .close-menu-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 2rem;
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+  }
+}
+
+/* Center dropdown under cart icon */
+@media (max-width: 576px) {
+  .cart-dropdown {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+  }
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Base spacing for mobile/smaller screens */
+.mobile-dbtk-spacing {
+    margin-inline-start: 0.5rem; /* Equivalent to ms-2 */
+    padding-left: 0.5rem;       /* Equivalent to px-2 (left side of text) */
+    padding-right: 0.5rem;      /* Equivalent to px-2 (right side of text) */
+}
+
+/* Spacing for computer mode (lg breakpoint and up) */
+@media (min-width: 992px) { /* This is Bootstrap's 'lg' breakpoint */
+    .computer-dbtk-spacing {
+        margin-inline-start: 2rem !important; /* Equivalent to ms-5, using !important for testing */
+        padding-left: 1rem !important;        /* Equivalent to px-3 */
+        padding-right: 1rem !important;       /* Equivalent to px-3 */
+    }
+}
+
+/* You might need to adjust the justify-content depending on your full layout */
+/* For 'd-flex' the 'ms-X' class controls the margin on the start side of the flex item itself. */
+/* If you want the text inside the strong to be aligned, ensure justify-content is appropriate. */
+/* If 'DBTK' is the only content, 'justify-content-start' is usually the default anyway. */

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Order Summary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    body { background-color: #f8f9fa; }
+    .dashboard-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 30px; margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .order-table th, .order-table td { vertical-align: middle; text-align: center; }
+    .order-table img { max-width: 60px; max-height: 60px; object-fit: cover; border-radius: 6px; }
+    .total-earnings { font-size: 1.25rem; font-weight: 600; color: #000; }
+    .table thead th { background-color: #212529; color: #fff; }
+    .nav-tabs .nav-link.active { background-color: #212529; color: #fff; border-color: #212529; }
+    .nav-tabs .nav-link { color: #212529; }
+    .tab-content { background-color: #fff; padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #dee2e6; border-top: none; }
+    .card-product-img { max-width: 100px; max-height: 100px; object-fit: cover; }
+    .stock-input { max-width: 80px; display: inline-block; }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="dashboard-header">
+      <h1 class="mb-0">Admin Dashboard</h1>
+      <div class="d-flex align-items-center">
+        <span class="total-earnings me-3">Total Earnings: &#8369;{{ "%.2f"|format(total_earnings) }}</span>
+        <form action="{{ url_for('admin_logout') }}" method="get" class="d-inline">
+          <button type="submit" class="btn btn-secondary me-2">Logout</button>
+        </form>
+        <form action="{{ url_for('admin_dashboard') }}" method="get" class="d-inline">
+          <button type="submit" class="btn btn-primary">Refresh Dashboard</button>
+        </form>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="true">Order Summary</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tshirt-tab" data-bs-toggle="tab" data-bs-target="#tshirt" type="button" role="tab" aria-controls="tshirt" aria-selected="false">T-Shirt</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tom-tab" data-bs-toggle="tab" data-bs-target="#tom" type="button" role="tab" aria-controls="tom" aria-selected="false">Tom Clutch</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="footwear-tab" data-bs-toggle="tab" data-bs-target="#footwear" type="button" role="tab" aria-controls="footwear" aria-selected="false">Footwear</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="accessories-tab" data-bs-toggle="tab" data-bs-target="#accessories" type="button" role="tab" aria-controls="accessories" aria-selected="false">Accessories</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="stickers-tab" data-bs-toggle="tab" data-bs-target="#stickers" type="button" role="tab" aria-controls="stickers" aria-selected="false">Stickers</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">Users</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="adminTabsContent">
+      <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4>All Orders</h4>
+          <form action="{{ url_for('clear_orders') }}" method="post" onsubmit="return confirm('Are you sure you want to clear all orders?');">
+            <button type="submit" class="btn btn-danger">Clear All Orders</button>
+          </form>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover order-table mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Province</th>
+                <th>Municipality/City</th>
+                <th>Barangay</th>
+                <th>Product</th>
+                <th>Design</th>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Payment Method</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.email }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.province }}</td>
+                <td>{{ order.municipality }}</td>
+                <td>{{ order.barangay }}</td>
+                <td>{{ order.apparel }}</td>
+                <td>
+                  {% if order.design %}
+                    <img src="{{ order.design }}" alt="Design">
+                  {% else %}
+                    <span class="text-muted">N/A</span>
+                  {% endif %}
+                </td>
+                <td>{{ order.accessories }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>&#8369;{{ order.price }}</td>
+                <td>{{ order.payment_method }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tshirt" role="tabpanel" aria-labelledby="tshirt-tab">
+        <h4>T-Shirt Products</h4>
+        <div class="row">
+          {% for product in tshirt_products %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">Price: {{ product.price }}</p>
+                <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                <form class="update-stock-form" data-product-category="tshirt" data-product-name="{{ product.name }}">
+                  <div class="input-group">
+                    <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}" min="0">
+                    <button type="submit" class="btn btn-outline-primary">Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tom" role="tabpanel" aria-labelledby="tom-tab">
+        <h4>Tom Clutch Products</h4>
+        <div class="row">
+          {% for product in tom_products %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">Price: {{ product.price }}</p>
+                <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                <form class="update-stock-form" data-product-category="tom" data-product-name="{{ product.name }}">
+                  <div class="input-group">
+                    <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}" min="0">
+                    <button type="submit" class="btn btn-outline-primary">Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="footwear" role="tabpanel" aria-labelledby="footwear-tab">
+        <h4>Footwear Products</h4>
+        <div class="row">
+          {% for product in footwear_products %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">Price: {{ product.price }}</p>
+                <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                <form class="update-stock-form" data-product-category="footwear" data-product-name="{{ product.name }}">
+                  <div class="input-group">
+                    <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}" min="0">
+                    <button type="submit" class="btn btn-outline-primary">Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="accessories" role="tabpanel" aria-labelledby="accessories-tab">
+        <h4>Accessories Products</h4>
+        <div class="row">
+          {% for product in accessories_products %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">Price: {{ product.price }}</p>
+                <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                <form class="update-stock-form" data-product-category="accessories" data-product-name="{{ product.name }}">
+                  <div class="input-group">
+                    <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}" min="0">
+                    <button type="submit" class="btn btn-outline-primary">Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="stickers" role="tabpanel" aria-labelledby="stickers-tab">
+        <h4>Stickers Products</h4>
+        <div class="row">
+          {% for product in stickers_products %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <img src="{{ product.image }}" class="card-img-top card-product-img" alt="{{ product.name }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">Price: {{ product.price }}</p>
+                <p class="card-text">Current Stock: <span class="stock-status">{{ product.stock }}</span></p>
+                <form class="update-stock-form" data-product-category="stickers" data-product-name="{{ product.name }}">
+                  <div class="input-group">
+                    <input type="number" name="stock" class="form-control stock-input" value="{{ product.stock }}" min="0">
+                    <button type="submit" class="btn btn-outline-primary">Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+        <h4>Registered Users</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+document.querySelectorAll('.update-stock-form').forEach(form => {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const productCategory = form.getAttribute('data-product-category'); // Get category
+    const productName = form.getAttribute('data-product-name');
+    const stockInput = form.querySelector('input[name="stock"]');
+    const newStock = stockInput.value;
+
+    // Use the category in the fetch URL
+    fetch(`/admin/update_stock/${encodeURIComponent(productCategory)}/${encodeURIComponent(productName)}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: `stock=${encodeURIComponent(newStock)}`
+    })
+    .then(response => {
+      if (response.redirected) {
+        window.location.href = response.url; // fallback if session expired
+        return;
+      }
+      // Update the stock status in the table
+      const stockStatus = form.parentElement.querySelector('.stock-status');
+      if (stockStatus) stockStatus.textContent = newStock;
+      // Optionally show a success message
+      stockInput.classList.add('is-valid');
+      setTimeout(() => stockInput.classList.remove('is-valid'), 1000);
+    })
+    .catch(() => {
+      stockInput.classList.add('is-invalid');
+      setTimeout(() => stockInput.classList.remove('is-invalid'), 1000);
+    });
+  });
+});
+  </script>
+</body>
+</html>

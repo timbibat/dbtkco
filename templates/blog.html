@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blogs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='blogs-style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col px-0 mx-0">
+                <nav class="navbar navbar-expand-xxl position-fixed top-0 w-100 z-3 py-3">
+                    <a href="{{ url_for('home') }}" class="h2 mx-2 px-2">
+                        <strong
+                            class="d-flex justify-content-start mobile-dbtk-spacing computer-dbtk-spacing">DBTK</strong>
+                    </a>
+                    <!-- All nav content collapses here on mobile -->
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+                        <!-- Wrapper for the sliding menu -->
+                        <div class="sliding-menu-wrapper">
+                            <!-- Nav links -->
+                            <div
+                                class="d-flex flex-column flex-lg-row justify-content-center align-items-center w-100 sliding-menu mx-5">
+                                <!-- Close button for mobile menu -->
+                                <button class="close-menu-btn d-lg-none p-1 me-3" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-label="Close menu"
+                                    style="z-index: 1050;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                                <div class="mx-5 no-style"><a href="{{ url_for('home') }}">Home</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('brand') }}">Brand</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('shop') }}">Shop</a></div>
+                                <div class="mx-5 no-style"><a href="#">Blog</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('lookbook') }}">Lookbook</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('aboutus') }}">About Us</a></div>
+                                <div class="mx-5 no-style"><a href="{{ url_for('contact') }}">Contact</a></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart and Search -->
+                    <div class="d-flex align-items-center ms-auto px-2">
+                        <!-- User Profile Dropdown - now with hover and color change on scroll -->
+                        <div class="dropdown profile-dropdown">
+                            <button class="btn btn-white position-relative" type="button" id="profileDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="background: transparent;">
+                                <i class="bi bi-person-circle profile-icon-white" id="profileIcon"
+                                    style="font-size: 1.7rem;"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                {% if session.get('user_logged_in') or session.get('admin_logged_in') %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('admin_logout') }}" style="color: #000;">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="dropdown-item-text" style="color: #000;">
+                                        <i class="bi bi-person"></i>
+                                        {{ session['firstname'] }} {{ session['lastname'] }}
+                                    </span>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('admin_login') }}" style="color: #000;">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('signup') }}" style="color: #000;">
+                                        <i class="bi bi-person-plus me-2"></i> Sign Up
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-white position-relative" type="button" id="cartDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                </svg>
+                                <span id="cartCount"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end p-3 cart-dropdown" style="min-width: 250px;"
+                                aria-labelledby="cartDropdown">
+                                <h6 class="dropdown-header">Your Shopping Cart</h6>
+                                <div id="cartItems" class="mb-2" style="max-height: 200px; overflow-y: auto;">
+                                    <p class="text-muted mb-0">Your cart is empty</p>
+                                </div>
+                                <div class="d-flex justify-content-between border-top pt-2">
+                                    <h6>Total:</h6>
+                                    <h6 id="cartTotal">₱0.00</h6>
+                                </div>
+                                <div class="d-grid gap-2 mt-2">
+                                    <a href="{{ url_for('cart_page') }}" class="btn btn-primary view-cart-btn">View
+                                        Cart</a>
+                                    <button id="checkoutBtn" class="btn btn-primary" disabled>Checkout</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col px-0 mx-0"><!-- Search Toggle Button -->
+                            <button class="btn btn-white" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#searchBar" aria-expanded="false" aria-controls="searchBar">
+                                <svg class="svg-icon icon-search" width="20px" height="20px" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g fill="currentColor" fill-rule="nonzero">
+                                        <path
+                                            d="M19.129,18.164 L14.611,13.644 C15.763,12.271 16.463,10.501 16.463,8.567 C16.463,4.206 12.928,0.671 8.567,0.671 C4.206,0.671 0.671,4.206 0.671,8.567 C0.671,12.928 4.206,16.463 8.567,16.463 C10.501,16.463 12.272,15.765 13.645,14.61 L18.165,19.129 C18.431,19.397 18.864,19.397 19.13,19.129 C19.396,18.863 19.396,18.431 19.129,18.164 Z M8.53051964,15.25 C4.85786,15.25 1.88,12.27 1.88,8.6 C1.88,4.93 4.85786,1.95 8.53052,1.95 C12.2032,1.95 15.18,4.93 15.18,8.6 C15.18,12.27 12.2032,15.25 8.53052,15.25 Z" />
+                                    </g>
+                                </svg>
+                            </button>
+                            <!-- Search Popup (below navbar) -->
+                            <div id="searchBar"
+                                class="collapse position-fixed top-0 start-0 w-100 bg-white shadow-lg z-1050">
+                                <div class="container py-1 mt-3">
+                                    <div class="input-group mb-1">
+                                        <input type="text" class="form-control form-control-lg" id="searchInput"
+                                            placeholder="Search products...">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#searchBar">×</button>
+                                    </div>
+                                    <!-- Search Results Grid -->
+                                    <div id="searchProductGrid" class="row justify-content-center"
+                                        style="max-height: 400px; overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Toggler button (hamburger icon for mobile) -->
+                        <!-- Update your existing navbar-toggler button with these classes -->
+                        <button class="navbar-toggler bg-white rounded" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add padding-top to prevent overlap with fixed navbar -->
+    <div class="container pt-5">
+        <!-- Centered "Lookbook" on top -->
+        <div class="row justify-content-center mb-3">
+            <div class="col-auto">
+                <strong class="fs-3">Blogs</strong>
+            </div>
+        </div>
+
+        <!-- Two columns: left text, right image -->
+        <div class="row">
+            <!-- Left column: text -->
+            <div class="col-md-6">
+                <strong class="fs-2">"BATA" - Filipino Pool Legend</strong>
+                <p class="fs-6 mt-2">
+                    Ang sukatan upang makamit ng isang tao ang tagumpay ay hindi lang nakasalalay sa determinasyon at
+                    tiyaga. Dapat buo rin ang loob mo sa pagharap sa mga pagsubok at mahal mo ang iyong ginagawa.
+                </p>
+            </div>
+
+            <!-- Right column: image -->
+            <div class="col-md-6">
+                <img src="https://dbtkco.com/cdn/shop/articles/efren_-_website_900x.png?v=1628747909" alt="BATA"
+                    class="img-fluid" />
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <!-- Row 1 -->
+        <div class="container">
+            <div class="row text-center gx-0">
+                <!-- Card 1 -->
+                <div class="col-12 col-md-3 p-3">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/FADS_MAIN_VISUAL_900x.jpg?v=1684738806"
+                        data-title="FADING FADS" data-date="May 22, 2023"
+                        data-desc="Social media algorithm is grabbing our interest fastly. It is convenient because we can easily access our interests.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/FADS_MAIN_VISUAL_900x.jpg?v=1684738806"
+                            alt="fading fads.png" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>FADING FADS</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="col-12 col-md-3 p-3">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/web_900x.jpg?v=1678095407"
+                        data-title="LIVING IN TWENTEENS" data-date="March 28, 2023"
+                        data-desc="People often say that once we reach our twenties, we should have more responsibilities, be dependent, be more physically presentable, (based on society’s common standard) focus on our career, and look forward to having a family.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/web_900x.jpg?v=1678095407"
+                            alt="LIVING IN TWENTEENS" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>LIVING IN TWENTEENS</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="col-12 col-md-3 p-3">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/web_abkd_cover_900x.jpg?v=1678873938"
+                        data-title="ABAKADA CO." data-date="March 16, 2023"
+                        data-desc="Abakada Clothing’s designs often feature Filipino symbols, language, and motifs, such as the Philippine flag, jeepneys, and Baybayin script.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/web_abkd_cover_900x.jpg?v=1678873938"
+                            alt="ABAKADA CO." class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>ABAKADA CO.</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="col-12 col-md-3 p-3">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/IMG_8641_900x.jpg?v=1669373455"
+                        data-title="DBTK x MONDAYSUCK" data-date="November 25, 2022"
+                        data-desc="Mondaysuck is a streetwear brand based out in San Diego, California... The brand mixes Filipino identity with streetwear.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/IMG_8641_900x.jpg?v=1669373455"
+                            alt="DBTK x MONDAYSUCK" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>DBTK x MONDAYSUCK</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="row text-center mt-5 gx-0" id="row2">
+                <!-- Card 5 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/BLOG_COVER_900x.jpg?v=1665544871"
+                        data-title="CONQUERING SELF-DOUBT" data-date="October 12, 2022"
+                        data-desc="Sometimes, we value the opinions of others as we are looking for validations from them. We are tailoring our movements to get the validation that we want.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/BLOG_COVER_900x.jpg?v=1665544871"
+                            alt="CONQUERING SELF-DOUBT" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>CONQUERING SELF-DOUBT</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/PACE_YOURSELVES-KIDS-01_900x.jpg?v=1658382216"
+                        data-title="PACE YOURSELVES, KIDS!" data-date="July 21, 2022"
+                        data-desc="There are times when we feel pressured to create progress, especially when we see others achieving their goals. This may urge us to work double time and non-stop so that we won’t be left behind.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/PACE_YOURSELVES-KIDS-01_900x.jpg?v=1658382216"
+                            alt="PACE YOURSELVES, KIDS!" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>PACE YOURSELVES, KIDS!</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 7 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/JUMP_IN-01_900x.jpg?v=1657088416"
+                        data-title="JUMP IN." data-date="July 6, 2022"
+                        data-desc="Most days, we feel as though we’re on autopilot. We turn on our devices on impulse, consume content like our lives depended on it, and sleep in the wee hours of the morning.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/JUMP_IN-01_900x.jpg?v=1657088416" alt="JUMP IN."
+                            class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>JUMP IN.</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 8 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/IMG_9460_900x.jpg?v=1654324273"
+                        data-title="HOW WAS THE DOERS CLUB ESTABLISHED" data-date="June 4, 2022"
+                        data-desc="DOERS CLUB is dedicated to all the Kids from different walks of life who have the same goal of achieving their dreams. It is a by-product of Kids who met at the detention room. The reasons for them being in detention are not what you think 😉">
+                        <img src="https://dbtkco.com/cdn/shop/articles/IMG_9460_900x.jpg?v=1654324273"
+                            alt="HOW WAS THE DOERS CLUB ESTABLISHED" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>HOW WAS THE DOERS CLUB ESTABLISHED?</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <!-- Row 3 -->
+            <div class="row text-center mt-5 gx-0" id="row3">
+                <!-- Card 9 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/Artboard_1_5f4f5b81-1b19-431d-a350-49d995dd53d9_1296x.jpg?v=1653291671"
+                        data-title="A REMINDER TO YOUR FUTURE SELF" data-date="May 23, 2022"
+                        data-desc="As we move about this digitalization of our lives through social media, we often find ourselves trapped in our own news feeds, with friends posting graduation and post-graduate toga shots, wedding pictorials, baby photos, a new car, a new house, a successful business, and more.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/Artboard_1_5f4f5b81-1b19-431d-a350-49d995dd53d9_1296x.jpg?v=1653291671"
+                            alt="fading fads.png" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>A REMINDER TO YOUR FUTURE SELF</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 10 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/LEARN_THE_ROPES-THESIS_EDITION-01_1296x.jpg?v=1649057009"
+                        data-title="LEARN THE ROPES: THESIS EDITION" data-date="April 4, 2022"
+                        data-desc="Thesis is an important requirement to get your college degree. You could say that this is the “final boss stage” that you need to overcome before you graduate. You need to propose a thesis statement that you want to prove, gather lots of information to prove your theory, and defend it from the panel.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/LEARN_THE_ROPES-THESIS_EDITION-01_1296x.jpg?v=1649057009"
+                            alt="fading fads.png" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>LEARN THE ROPES: THESIS EDITION</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 11 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/Untitled-1_78c0f658-b12f-466e-97ef-30a91e9c2667_900x.jpg?v=1653366020"
+                        data-title="FRIENDS & FAMILY 21-22" data-date="March 24, 2022"
+                        data-desc="The Friends & Family tee is a very special release yearly, to celebrate the journey and camaraderie that we built with the Kids. A portion of the sales that we garner in the FNF release will be donated to our chosen charity. This is our way of establishing connections not only to the Kids, but also to the people who need a helping hand.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/Untitled-1_78c0f658-b12f-466e-97ef-30a91e9c2667_900x.jpg?v=1653366020"
+                            alt="fading fads.png" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>FRIENDS & FAMILY 21-22</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+                <!-- Card 12 -->
+                <div class="col-12 col-md-3 p-4">
+                    <div class="card border-0 clickable-card" style="cursor: pointer;"
+                        data-img="https://dbtkco.com/cdn/shop/articles/Artboard_1_e93232a8-58e4-4c69-b209-7e7c3a3b8e0b_900x.jpg?v=1647928707"
+                        data-title="PASSAGE OF TIME" data-date="March 22, 2022"
+                        data-desc="Do you ever feel like time passes by so quickly? The days are moving faster, to the point that everything is a blur.">
+                        <img src="https://dbtkco.com/cdn/shop/articles/Artboard_1_e93232a8-58e4-4c69-b209-7e7c3a3b8e0b_900x.jpg?v=1647928707"
+                            alt="fading fads.png" class="card-img-top uniform-img" />
+                        <div class="card-body p-2"><strong>PASSAGE OF TIME</strong></div>
+                    </div>
+                    <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                        <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                        <h5 class="expanded-title"></h5>
+                        <p class="text-muted expanded-date"></p>
+                        <p class="expanded-desc"></p>
+                    </div>
+                </div>
+
+
+
+                <!-- Cards 13-20 -->
+                <div id="moreCards" class="row text-center gx-0 d-none">
+                    <!-- Row 4: Cards 13-16 -->
+                    <div class="row text-center mt-5 gx-0" id="row4">
+                        <!-- Card 13 -->
+                        <div class="col-12 col-md-3 p-4">
+                            <div class="card border-0 clickable-card" style="cursor: pointer;"
+                                data-img="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DSC06637.jpg?v=1646041002"
+                                data-title="RECAP: DBTK x Pokémon - VIP Release" data-date="February 28, 2022"
+                                data-desc="After all the hectic preparations and adjustments, the day of making the DBTK x Pokémon collection has finally come to the public. ">
+                                <img src="https://cdn.shopify.com/s/files/1/0248/7910/4072/files/DSC06637.jpg?v=1646041002"
+                                    alt="fading fads.png" class="card-img-top uniform-img" />
+                                <div class="card-body p-2"><strong>RECAP: DBTK x Pokémon - VIP Release</strong></div>
+                            </div>
+                            <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                                <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                                <h5 class="expanded-title"></h5>
+                                <p class="text-muted expanded-date"></p>
+                                <p class="expanded-desc"></p>
+                            </div>
+                        </div>
+                        <!-- Card 14 -->
+                        <div class="col-12 col-md-3 p-4">
+                            <div class="card border-0 clickable-card" style="cursor: pointer;"
+                                data-img="https://dbtkco.com/cdn/shop/articles/Artboard_1_900x.jpg?v=1645609777"
+                                data-title="DBTK x Pokémon - #UNITEDATPLAY" data-date="February 23, 2022"
+                                data-desc="Nostalgic for the old generation of “Kids”, and an introduction for the new. ">
+                                <img src="https://dbtkco.com/cdn/shop/articles/Artboard_1_900x.jpg?v=1645609777"
+                                    alt="fading fads.png" class="card-img-top uniform-img" />
+                                <div class="card-body p-2"><strong>DBTK x Pokémon - #UNITEDATPLAY</strong></div>
+                            </div>
+                            <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                                <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                                <h5 class="expanded-title"></h5>
+                                <p class="text-muted expanded-date"></p>
+                                <p class="expanded-desc"></p>
+                            </div>
+                        </div>
+                        <!-- Card 15 -->
+                        <div class="col-12 col-md-3 p-4">
+                            <div class="card border-0 clickable-card" style="cursor: pointer;"
+                                data-img="https://dbtkco.com/cdn/shop/articles/TIMELINE_900x.jpg?v=1643178348"
+                                data-title="DBTK COMPILATION TEES" data-date="January 27, 2022"
+                                data-desc="The DBTK Compilation Tee started as early as the year 2015, as a quick strike release. Before, the continuity of the compilation tee was off the books, however, its fate changed when the first DBTK Compilation Tee (2015) became sold out.">
+                                <img src="https://dbtkco.com/cdn/shop/articles/TIMELINE_900x.jpg?v=1643178348"
+                                    alt="fading fads.png" class="card-img-top uniform-img" />
+                                <div class="card-body p-2"><strong>DBTK COMPILATION TEES</strong></div>
+                            </div>
+                            <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                                <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                                <h5 class="expanded-title"></h5>
+                                <p class="text-muted expanded-date"></p>
+                                <p class="expanded-desc"></p>
+                            </div>
+                        </div>
+                        <!-- Card 16 -->
+                        <div class="col-12 col-md-3 p-4">
+                            <div class="card border-0 clickable-card" style="cursor: pointer;"
+                                data-img="https://dbtkco.com/cdn/shop/articles/Untitled-1_669a6503-963f-4b78-b0a2-d277a34eeed1_900x.jpg?v=1641889764"
+                                data-title="CELEBRATING SMALL WINS" data-date="January 11, 2022"
+                                data-desc="Do you celebrate your small wins? Or do they tend to be neglected because of their “little gravity”?">
+                                <img src="https://dbtkco.com/cdn/shop/articles/Untitled-1_669a6503-963f-4b78-b0a2-d277a34eeed1_900x.jpg?v=1641889764"
+                                    alt="fading fads.png" class="card-img-top uniform-img" />
+                                <div class="card-body p-2"><strong>CELEBRATING SMALL WINS</strong></div>
+                            </div>
+                            <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                                <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                                <h5 class="expanded-title"></h5>
+                                <p class="text-muted expanded-date"></p>
+                                <p class="expanded-desc"></p>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Row 5 -->
+                        <div class="row text-center mt-5 gx-0" id="row5">
+                            <!-- Card 17 -->
+                            <div class="col-12 col-md-3 p-4">
+                                <div class="card border-0 clickable-card" style="cursor: pointer;"
+                                    data-img="https://dbtkco.com/cdn/shop/articles/web_-_fear_the_brave_900x.png?v=1635755274"
+                                    data-title="FEAR THE BRAVE" data-date="November 1, 2021"
+                                    data-desc="Most of the time, the word “brave” is associated with people with predator-like characteristics, like being fearless, intimidating aura, always at the top of the food chain, and the like.">
+                                    <img src="https://dbtkco.com/cdn/shop/articles/web_-_fear_the_brave_900x.png?v=1635755274"
+                                        alt="fading fads.png" class="card-img-top uniform-img" />
+                                    <div class="card-body p-2"><strong>"FEAR THE BRAVE"</strong></div>
+                                </div>
+                                <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                                    <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                                    <h5 class="expanded-title"></h5>
+                                    <p class="text-muted expanded-date"></p>
+                                    <p class="expanded-desc"></p>
+                                </div>
+                            </div>
+                            <!-- Card 18 -->
+                            <div class="col-12 col-md-3 p-4">
+                                <div class="card border-0 clickable-card" style="cursor: pointer;"
+                                    data-img="https://dbtkco.com/cdn/shop/articles/blog_-_9th_yr_1080x.jpg?v=1634261793"
+                                    data-title="DBTK 9TH YEAR: REALIZE YOUR DREAMS" data-date="October 15, 2021"
+                                    data-desc="Dreaming is as easy as one-two-three. All you have to do is to think of something that you really want to do or have in life. What comes next relies on what you would do about it. Some people let their dreams stay as imaginary, while others take action. After all, it all boils down to how badly you want it to happen.">
+                                    <img src="https://dbtkco.com/cdn/shop/articles/blog_-_9th_yr_1080x.jpg?v=1634261793"
+                                        alt="fading fads.png" class="card-img-top uniform-img" />
+                                    <div class="card-body p-2"><strong>DBTK 9TH YEAR: REALIZE YOUR DREAMS</strong></div>
+                                </div>
+                                <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                                    <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                                    <h5 class="expanded-title"></h5>
+                                    <p class="text-muted expanded-date"></p>
+                                    <p class="expanded-desc"></p>
+                                </div>
+                            </div>
+                            <!-- Card 19 -->
+                            <div class="col-12 col-md-3 p-4">
+                                <div class="card border-0 clickable-card" style="cursor: pointer;"
+                                    data-img="https://dbtkco.com/cdn/shop/articles/web_-_blog_900x.jpg?v=1631767282"
+                                    data-title="DBTK x Secret Fresh ALL IN 2021" data-date="September 16, 2021"
+                                    data-desc="Over the years, Emil Kids and Vince Kids formed a partnership, and admired his work ethics. He is meticulous when it comes to creating products/collaboration pieces, and going ALL-IN on the things he’s passionate about.">
+                                    <img src="https://dbtkco.com/cdn/shop/articles/web_-_blog_900x.jpg?v=1631767282"
+                                        alt="fading fads.png" class="card-img-top uniform-img" />
+                                    <div class="card-body p-2"><strong>DBTK x Secret Fresh "ALL IN" 2021</strong></div>
+                                </div>
+                                <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                                    <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                                    <h5 class="expanded-title"></h5>
+                                    <p class="text-muted expanded-date"></p>
+                                    <p class="expanded-desc"></p>
+                                </div>
+                            </div>
+                            <!-- Card 20 -->
+                            <div class="col-12 col-md-3 p-4">
+                                <div class="card border-0 clickable-card" style="cursor: pointer;"
+                                    data-img="https://dbtkco.com/cdn/shop/articles/Artboard_2.png?v=1629273557"
+                                    data-title="DBTK x Ultraman" data-date="August 19, 2021"
+                                    data-desc="For children who grew up between the early 60s to sometime around the 90s, the silver and red hero with legendary massive eyes would be instantly recognizable. Ultraman, as he is known, has been a global phenomenon, cementing its place in popular culture as among the pioneers of the tokusatsu heroes – a genre from which the likes of Power Rangers and a handful of more Ultraman spinoff shows and characters were patterned after. ">
+                                    <img src="https://dbtkco.com/cdn/shop/articles/Artboard_2.png?v=1629273557"
+                                        alt="Image 20" class="card-img-top uniform-img" />
+                                    <div class="card-body p-2"><strong>DBTK x Ultraman</strong></div>
+                                </div>
+                                <div class="expanded-details d-none mt-2 bg-light p-3 rounded text-start">
+                                    <img src="" class="img-fluid rounded mb-2" alt="Expanded" />
+                                    <h5 class="expanded-title"></h5>
+                                    <p class="text-muted expanded-date"></p>
+                                    <p class="expanded-desc"></p>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <!-- Load More Button -->
+                <div class="row">
+                    <div class="col text-center my-4">
+                        <button id="loadMoreBtn" class="btn btn-dark px-4 py-2">LOAD MORE</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="container">
+            <footer class="py-3 my-4">
+                <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                    <li class="nav-item"><a href="{{ url_for('home') }}" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a href="{{ url_for('brand') }}" class="nav-link px-2 text-muted">Brand</a>
+                    </li>
+                    <li class="nav-item"><a href="{{ url_for('shop') }}" class="nav-link px-2 text-muted">Shop</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Blog</a></li>
+                    <li class="nav-item"><a href="{{ url_for('lookbook') }}"
+                            class="nav-link px-2 text-muted">Lookbook</a></li>
+                    <li class="nav-item"><a href="{{ url_for('aboutus') }}" class="nav-link px-2 text-muted">About
+                            Us</a></li>
+                    <li class="nav-item"><a href="{{ url_for('contact') }}" class="nav-link px-2 text-muted">Contact</a>
+                    </li>
+                </ul>
+                <p class="text-center text-muted">© 2025 Company, Inc</p>
+            </footer>
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+            crossorigin="anonymous"></script>
+        <script>
+            document.getElementById('loadMoreBtn').addEventListener('click', function () {
+                document.getElementById('moreCards').classList.remove('d-none');
+                this.style.display = 'none';
+            });
+        </script>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+        <script>
+            document.querySelectorAll('.clickable-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const parentCol = card.closest('.col-6, .col-md-3');
+                    const detailSection = parentCol.querySelector('.expanded-details');
+
+                    const img = card.getAttribute('data-img');
+                    const title = card.getAttribute('data-title');
+                    const date = card.getAttribute('data-date');
+                    const desc = card.getAttribute('data-desc');
+
+                    document.querySelectorAll('.expanded-details').forEach(section => {
+                        if (section !== detailSection) section.classList.add('d-none');
+                    });
+
+                    if (detailSection.classList.contains('d-none')) {
+                        detailSection.classList.remove('d-none');
+                        detailSection.querySelector('img').src = img;
+                        detailSection.querySelector('.expanded-title').textContent = title;
+                        detailSection.querySelector('.expanded-date').textContent = date;
+                        detailSection.querySelector('.expanded-desc').textContent = desc;
+                        detailSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        detailSection.classList.add('d-none');
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            window.addEventListener('scroll', function () {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+
+                const icon = document.getElementById('icon-search');
+                if (window.scrollY > 50) {
+                    icon.id.add('icon-scrolled');
+                } else {
+                    icon.id.remove('icon-scrolled');
+                }
+            });
+
+        </script>
+</body>
+
+</html>
